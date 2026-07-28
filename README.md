@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Focus-Deep%20Research%20Pipeline%20Design-FF6B6B?style=for-the-badge&labelColor=0D1117&logo=buffer&logoColor=white" />
-  <img src="https://img.shields.io/badge/Method-14--arm%20Ablation-8B5CF6?style=for-the-badge&labelColor=0D1117&logo=experiment&logoColor=white" />
+  <img src="https://img.shields.io/badge/Focus-Deep%20Research%20Pipeline%20Design-FF6B6B?style=for-the-badge&labelColor=0D1117&logo=target&logoColor=white" />
+  <img src="https://img.shields.io/badge/Method-14_arm%20Ablation-8B5CF6?style=for-the-badge&labelColor=0D1117&logo=flask&logoColor=white" />
   <img src="https://img.shields.io/badge/Eval-Claude%20Opus%204.8%20Blind%20Judging-58A6FF?style=for-the-badge&labelColor=0D1117&logo=openai&logoColor=white" />
 </p>
 
