@@ -84,19 +84,29 @@ F115 的"没读过不得写"纪律在冷门题上诚实交了白卷，裸模型�
 
 <br/>
 
-## 🏗️ Architecture
+## 🏗️ Project Structure
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                     deepresearch-arms-lab                       │
-├──────────────┬──────────────┬──────────────┬───────────────────┤
-│   arms/      │   eval/      │   common/    │   scripts/        │
-│              │              │              │                   │
-│  30 个 arm   │  judge.py    │  共享工具    │  dash_agg.py      │
-│  实现文件    │  run.py      │  函数库     │  dash_qa_build.py │
-│              │  questions   │              │  sanitize.py      │
-│  B/F/G 系列  │  .json       │              │                   │
-└──────────────┴──────────────┴──────────────┴───────────────────┘
+| Directory | Contents | Description |
+|:---|:---|:---|
+| `arms/` | 30 个 arm 实现文件 | B/F/G 系列 pipeline 方案 |
+| `eval/` | judge.py, run.py, questions.json | 评测体系（Claude Opus 盲评） |
+| `common/` | 共享工具函数 | 各 arm 公共依赖 |
+| `scripts/` | dash_agg.py, dash_qa_build.py, sanitize.py | 数据处理与面板生成 |
+
+```
+deepresearch-arms-lab/
+├── arms/              # 30 个 arm 实现
+│   ├── arm_b_claude_code.py
+│   ├── arm_f102_postverify.py
+│   ├── arm_f11_precite.py
+│   ├── arm_f115_full.py
+│   └── ...
+├── eval/              # 评测体系
+├── common/            # 共享工具
+├── scripts/           # 数据处理
+├── dashboard.html     # 交互式结果面板
+├── EXPERIMENTS.md     # 实验详细记录
+└── qa_data.json       # 评测数据
 ```
 
 <br/>
