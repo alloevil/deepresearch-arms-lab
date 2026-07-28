@@ -6,8 +6,12 @@ its original license and attribution.
 
 ## DeepResearch Bench questions (Apache License 2.0)
 
-`eval/questions_ext.json` contains 10 research questions (ids `e07`–`e15`,
-plus `e01`–`e06`) borrowed verbatim from the **DeepResearch Bench** project:
+`eval/questions_ext.json` contains 15 research questions (ids `e01`–`e15`)
+borrowed verbatim from the **DeepResearch Bench** project. Of these, `e11`–`e15`
+(5 questions) are used in this repo's main n=15 comparison (added to the 10
+self-authored questions in `eval/questions.json`); `e01`–`e10` were used in
+earlier exploratory generalization checks documented in `EXPERIMENTS.md` and
+are not part of the main comparison table.
 
 - Source: https://github.com/Ayanami0730/deep_research_bench
 - License: Apache License 2.0 (full text: https://www.apache.org/licenses/LICENSE-2.0)

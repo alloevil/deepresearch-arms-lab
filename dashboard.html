@@ -112,6 +112,14 @@ td:first-child, th:first-child { padding-left: 0; }
 .qa-report { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12px; line-height: 1.55; max-height: 46vh; overflow-y: auto; background: var(--page);
   border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--ink-1); }
+.mech-family { padding: 16px 0; border-bottom: 1px solid var(--grid); }
+.mech-family:last-child { border-bottom: 0; padding-bottom: 0; }
+.mech-family:first-child { padding-top: 0; }
+.mech-family h3 { font-size: 14px; margin: 0 0 8px; }
+.mech-item { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 6px 0; font-size: 13px; line-height: 1.55; }
+.mech-item b { font-weight: 650; }
+.mech-item .arm-tag { font-weight: 650; font-variant-numeric: tabular-nums; }
+.mech-item .desc { color: var(--ink-2); }
 </style>
 </head>
 <body>
@@ -177,6 +185,38 @@ td:first-child, th:first-child { padding-left: 0; }
 <div class="card">
   <div style="font-size:13px;color:var(--ink-2);margin-bottom:6px">引用忠实度 · 子句级支持率(0–1)</div>
   <div id="bar-sub"></div>
+</div>
+
+<h2>各方案具体怎么做</h2>
+<p class="sub">上面表格里的一句话机制描述压缩了很多信息——这里展开说清楚每个方案实际在做什么。所有 arm 共享同一套基础 agent 循环(检索→读页→写作),差别在于"引用什么时候被绑定、由哪个 pass 负责"。</p>
+<div class="card">
+  <div class="mech-family">
+    <h3>① 写作时自觉遵守协议(B → B3 → F9.1)—— 守不住</h3>
+    <div class="mech-item"><span class="arm-tag">B</span><span class="desc">单一连续 pass,普通提示词,没有任何专门的引用机制——"就是让模型自己去做 deep research"。</span></div>
+    <div class="mech-item"><span class="arm-tag">B3</span><span class="desc">同样单 pass,但提示词里加了明确的引用协议(每条事实性论断都要引用、遵守指定格式)。测的是"好好说话"够不够。</span></div>
+    <div class="mech-item"><span class="arm-tag">F9.1</span><span class="desc">更进一步:模型必须维护一份"关键论断登记表",写进报告前先把论断和逐字摘录的出处登记进去。测外部记账式自律能不能扛住更重的协议——扛不住:弱基座守不住登记表,耗时还接近翻倍,忠实度没有换来提升。</span></div>
+  </div>
+  <div class="mech-family">
+    <h3>② 引用后置核修(F10 → F10.2)—— 事后审核</h3>
+    <div class="mech-item"><span class="arm-tag">F10</span><span class="desc">写作 pass 完全自由发挥(提示词里直接撤掉引用协议)。独立的第二个 pass 读草稿 + 原始工具调用记录(search_calls.jsonl),把能核实的句子事后补上引用。</span></div>
+    <div class="mech-item"><span class="arm-tag">F10.2</span><span class="desc">同样的第二个 pass,但不是从零补引用,而是审核 B 已经写好的每条引用——核对页面原文后判定保留/减弱/替换/标"[未证实]"。这是更轻量的版本:完全不动写作 pass,只在事后核对+诚实标注。</span></div>
+  </div>
+  <div class="mech-family">
+    <h3>③ 采集侧预引用(F11 及其扰动)—— 靠编号引用,不靠记忆</h3>
+    <div class="mech-item"><span class="arm-tag">F11</span><span class="desc">检索/读页工具被包装过:每次读到的页面都会被机械分配一个稳定编号 [Sn],写进模型看到的页头。写作提示词的规则很简单——只能引用被分配过编号的页,而且写编号,绝不写 URL。渲染阶段再由代码把 [Sn] 机械转成带真实链接的脚注。模型结构性地不可能编 URL,因为它从来没写过 URL。</span></div>
+    <div class="mech-item"><span class="arm-tag">F11.1</span><span class="desc">同一套机制,放大检索广度配额(写作前读更多源)。测广度本身有没有用——没有:源一多,引错编号的概率反而上升。</span></div>
+    <div class="mech-item"><span class="arm-tag">F11.2</span><span class="desc">同一套机制,但写作提示词额外允许模型陈述背景知识/参数化知识(不挂编号的"第二通道")。测"不引用就不能说"这条纪律能不能稍微放松——不能:一旦开了口子,模型就会依赖它,矛盾也跟着回潮。</span></div>
+    <div class="mech-item"><span class="arm-tag">F11.3</span><span class="desc">同一套机制,外加结构约束:强制一句只能有一个原子事实论断(不能把多个论断塞进一句话共用一个引用)。测更细粒度的句子能不能带来更干净的引用——适得其反,弱接地的微观论断反而更多了。</span></div>
+  </div>
+  <div class="mech-family">
+    <h3>④ 研究写作分离(F11.4 → F115)—— 把认知预算拆到不同 pass</h3>
+    <div class="mech-item"><span class="arm-tag">F11.4</span><span class="desc">(F115 的前身,未单独入表)把 F11 拆成两个彻底分离的 pass。专职的"研究"pass 负责广泛阅读,把内容逐字摘录+编号写进笔记文件;独立的"写作"pass 只能从这份笔记文件取材——它完全没有检索/读页工具权限,这是工具层的硬隔离,不是提示词层的建议。广度纪律和引用纪律终于不用挤在同一个 pass 里抢预算了。</span></div>
+    <div class="mech-item"><span class="arm-tag">F115</span><span class="desc">F11.4 的两个阶段之上,再加第三个阶段——F10.2 风格的后置核修跑在最终产出上,把还没核实的部分标出来。三个 pass,各管一件事:<b>研究阶段广泛检索 → 写作阶段只从笔记离线取材 → 核修阶段核对并诚实标注没扛住的部分。</b></span></div>
+  </div>
+  <div class="mech-family">
+    <h3>🌍 外部系统对照(G)</h3>
+    <div class="mech-item"><span class="arm-tag">G</span><span class="desc">把整条 pipeline 换成 <a href="https://github.com/assafelovic/gpt-researcher" target="_blank" rel="noopener">GPT-Researcher</a>(成熟的开源 deep research 框架),接上同一个基座模型和(尽量)同一套检索后端,看现成的成熟框架是否比自研设计更好——n=3,只作初步观察,不当结论。</span></div>
+  </div>
 </div>
 
 <h2>实验历程</h2>

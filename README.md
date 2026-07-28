@@ -71,11 +71,11 @@ F115's "no read, no write" discipline honestly reported blank answers on obscure
 
 ### 🏆 Recommended: F115 — Three-Stage Pipeline
 
-Pre-cite research → offline writing → post-hoc verification. **Dual-optimal on both quality (8.75) and faithfulness (0.67), validated at n=15.**
+Pre-cite research → offline writing → post-hoc verification. **Dual-optimal on both quality (8.21) and faithfulness (0.69), validated at n=15** — though the margin over baseline narrows on retrieval-poor topics (see "The Cost of Honesty" above).
 
-| Arm | judge | faithful. | n | delta vs B |
+| Arm | judge | faithful. | n | delta vs B (n=15) |
 |:---|---:|---:|---:|---:|
-| **F115** | **8.75** | **0.67** | **15** | quality +0.66, faith. +0.20 |
+| [**F115**](arms/arm_f115_full.py) | **8.21** | **0.69** | **15** | quality +0.12, faith. +0.22 |
 
 ### 📌 Baseline & Negative Results
 
@@ -83,9 +83,9 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Mechanism | judge | faithful. | n | Verdict |
 |:---:|:---|---:|---:|---:|:---:|
-| B | Bare execution (no citation protocol) | 8.09 | 0.47 | 15 | ![baseline](https://img.shields.io/badge/●-Baseline-gray?style=flat&labelColor=transparent) |
-| B3 | + citation protocol prompt | 8.04 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Gains%20didn't%20transfer-red?style=flat&labelColor=transparent) |
-| F9.1 | + key claims registry during generation | 8.13 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Weak%20model%20can't%20hold%20protocol-red?style=flat&labelColor=transparent) |
+| [B](arms/arm_b_claude_code.py) | Bare execution (no citation protocol) | 8.09 | 0.47 | 15 | ![baseline](https://img.shields.io/badge/●-Baseline-gray?style=flat&labelColor=transparent) |
+| [B3](arms/arm_b3_protocol.py) | + citation protocol prompt | 8.04 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Gains%20didn't%20transfer-red?style=flat&labelColor=transparent) |
+| [F9.1](arms/arm_f91_evidence.py) | + key claims registry during generation | 8.13 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Weak%20model%20can't%20hold%20protocol-red?style=flat&labelColor=transparent) |
 
 ### ✅ Validated: Pipeline-Level Solutions
 
@@ -93,9 +93,9 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Mechanism | judge | faithful. | n | Approach |
 |:---:|:---|---:|---:|---:|:---:|
-| F10 | Post-hoc citation (withdraw protocol) | 7.58 | 0.72 | 3 | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
-| **F10.2** | **B + independent post-hoc verification** | **7.67** | **0.72** | **3** | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
-| **F11** | **Source-side pre-citation** | 7.63 | **0.73** | **10** | ![pre-cite](https://img.shields.io/badge/●-Pre--cite-purple?style=flat&labelColor=transparent) |
+| [F10](arms/arm_f10_postcite.py) | Post-hoc citation (withdraw protocol) | 7.58 | 0.72 | 3 | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
+| [**F10.2**](arms/arm_f102_postverify.py) | **B + independent post-hoc verification** | **7.69** | **0.58** | **15** | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
+| [**F11**](arms/arm_f11_precite.py) | **Source-side pre-citation** | **7.88** | **0.73** | **15** | ![pre-cite](https://img.shields.io/badge/●-Pre--cite-purple?style=flat&labelColor=transparent) |
 
 ### ⚠️ Boundary Exploration
 
@@ -103,24 +103,82 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Variation | judge | faithful. | n | Effect |
 |:---:|:---|---:|---:|---:|:---:|
-| F11.1 | + allow background knowledge | 7.80 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.18 |
-| F11.2 | + relax per-source limit | 7.97 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.18 |
-| F11.3 | + atomic sentence splitting | 8.17 | 0.59 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.14 |
+| [F11.1](arms/arm_f111_precite.py) | + breadth quota (wider retrieval budget) | 7.54 | 0.68 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. −0.05, misattribution appears with more sources |
+| [F11.2](arms/arm_f112_dualchannel.py) | + dual-channel (allow background/parametric knowledge alongside citations) | 8.83 | 0.74 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) discipline ignored — contradictions return despite similar subclaim rate |
+| [F11.3](arms/arm_f113_atomic.py) | + force one atomic claim per sentence | 8.60 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. −0.18, induces more weakly-grounded assertions |
+
+### 🌍 External System Comparison
+
+> A sanity check, not a firm conclusion — **n=3, labeled preliminary.**
+
+| Arm | Mechanism | judge | faithful. | n | Verdict |
+|:---:|:---|---:|---:|---:|:---:|
+| [G](arms/arm_g_gptr.py) | GPT-Researcher (mature external framework) + same weak base model | 5.75 | 0.45 | 3 | ![negative](https://img.shields.io/badge/●-Preliminary%2C%20not%20a%20conclusion-red?style=flat&labelColor=transparent) |
+
+GPT-Researcher is a well-regarded open-source deep-research framework, but swapping in this weak Chinese base model collapsed its results — a leaderboard-strong pipeline's advantage doesn't automatically transfer across model/language/retrieval-source changes. Only 3 questions were run (search-quota and embedding-language issues made a larger batch impractical in this round), so treat this as a preliminary signal, not proof that external frameworks can't work here.
+
+<br/>
+
+## 🔬 How Each Approach Works
+
+The one-line "Mechanism" column above compresses a lot — here's what each family actually does, mechanically. Every arm shares the same base agent loop (search → read → write); what differs is *when citations get attached and by which pass*.
+
+### 1️⃣ Self-discipline during writing (B → B3 → F9.1) — doesn't hold up
+
+- **[B](arms/arm_b_claude_code.py)**: one continuous pass, ordinary prompting. No special citation machinery — this is "just ask the model to do deep research."
+- **[B3](arms/arm_b3_protocol.py)**: same single pass, but the prompt adds an explicit citation protocol (cite every factual claim, follow a specific format). Tests whether *asking nicely* is enough.
+- **[F9.1](arms/arm_f91_evidence.py)**: goes further — the model must maintain a running "key-claims ledger" file, appending each claim and its verbatim source excerpt *before* it's allowed to use that claim in the report. Tests whether external bookkeeping discipline holds up under a heavier protocol. It doesn't: the weak model can't reliably maintain the ledger, and latency roughly doubles for no faithfulness gain.
+
+### 2️⃣ Post-hoc citation repair (F10 → F10.2) — audit after the fact
+
+- **[F10](arms/arm_f10_postcite.py)**: the drafting pass writes completely freely (citation protocol removed from the prompt entirely). A second, independent pass then reads the draft plus the raw tool-call trace (`search_calls.jsonl`) and retroactively attaches citations to whichever sentences it can back up with something actually retrieved.
+- **[F10.2](arms/arm_f102_postverify.py)**: same second pass, but instead of attaching citations from scratch, it *audits what B already wrote* — for each existing citation it decides keep / weaken / replace / flag `[unverified]`, checking the claim against the real fetched page content. This is the lighter-touch version: it doesn't touch the drafting pass at all, just fact-checks and honestly labels it afterward.
+
+### 3️⃣ Source-side pre-citation (F11 and its perturbations) — cite by ID, not by memory
+
+- **[F11](arms/arm_f11_precite.py)**: the search/read tool is wrapped so every fetched page gets a stable numeric id `[Sn]` injected into a header the model sees. The writing prompt's rule is simple: *you may only cite a page you were assigned a number for, and you write the number — never a URL.* A mechanical post-processing step converts `[Sn]` into real numbered footnotes with the actual URL filled in by code, not by the model. The model structurally cannot fabricate a URL, because it never writes one.
+- **[F11.1](arms/arm_f111_precite.py)**: same mechanism, larger retrieval budget (reads more sources before writing) — tests whether breadth alone helps. It doesn't: more sources in play means more chances to cite the wrong number.
+- **[F11.2](arms/arm_f112_dualchannel.py)**: same mechanism, but the writing prompt now also permits stating things from general/background knowledge alongside numbered citations (a second, uncited "channel"). Tests whether relaxing "cite it or don't say it" even slightly is safe. It isn't: once an escape hatch exists, the model leans on it and contradictions creep back in.
+- **[F11.3](arms/arm_f113_atomic.py)**: same mechanism, plus a structural constraint forcing exactly one atomic factual claim per sentence (no compound sentences bundling multiple claims under one citation). Tests whether finer-grained sentences produce cleaner citations. It backfires — more, weaker-grounded micro-claims.
+
+### 4️⃣ Research/writing separation (F11.4 → F115) — split the cognitive budget across passes
+
+- **F11.4** (precursor to F115, not separately tabled above): splits F11 into two hard-separated passes. A dedicated *research* pass does the broad reading and takes verbatim notes (with `[Sn]` numbers) into a notes file. A separate *writing* pass drafts the report from *only* that notes file — it has no search/read tool access at all, a tool-level constraint, not just an instruction. This is what let breadth and citation discipline coexist without one pass having to hold both jobs.
+- **[F115](arms/arm_f115_full.py)**: F11.4's two stages, plus a third — the F10.2-style post-hoc audit runs on the output, flagging anything that's still unverified. Three passes, each with exactly one job: **research broadly → write offline from notes only → audit and honestly label what didn't hold up.**
+
+### 🌍 External baseline (G)
+
+- **[G](arms/arm_g_gptr.py)**: the entire pipeline is swapped for [GPT-Researcher](https://github.com/assafelovic/gpt-researcher), pointed at the same base model and (as far as practical) the same search backend, to check whether a mature off-the-shelf framework simply does better than any custom design here.
+
+<br/>
+
+## ⚠️ Known Limitations
+
+Disclosed here instead of glossed over, since the project's own thesis is that honesty about gaps beats a smoother-looking number:
+
+- **No token/cost instrumentation.** `meta.json`'s `tokens.in/out` fields are always 0 in this round — `avg_secs` (wall-clock time per run) is the only cost proxy available. "Is the extra pipeline stage worth it?" can only be answered on latency here, not token spend.
+- **The GPT-Researcher comparison (arm G) is n=3.** Labeled preliminary everywhere it's mentioned — not enough samples to support "external systems necessarily fail on weak base models" as a strong claim.
+- **Judge scores have real run-to-run variance** (~1.0 on the same prompt, measured empirically). Any two-arm comparison should be read alongside its `n`, not as a bare point estimate.
 
 <br/>
 
 ## 🏗️ Project Structure
 
+`arms/` has 31 files in total — the 14 covered in the comparison above, plus
+17 earlier-round experiments (workflow/scaffold designs, model-choice arms)
+that are superseded but kept for the historical record; see `EXPERIMENTS.md`
+for their story.
+
 | Directory | Contents | Description |
 |:---|:---|:---|
-| `arms/` | 30 arm implementations | B/F/G series pipeline designs |
+| `arms/` | 31 arm implementations | B/F/G series pipeline designs |
 | `eval/` | judge.py, run.py, questions.json | Evaluation system (Claude Opus blind judging) |
 | `common/` | Shared utility functions | Common dependencies across arms |
 | `scripts/` | dash_agg.py, dash_qa_build.py, sanitize.py | Data processing & dashboard generation |
 
 ```
 deepresearch-arms-lab/
-├── arms/              # 30 arm implementations
+├── arms/              # 31 arm implementations
 │   ├── arm_b_claude_code.py
 │   ├── arm_f102_postverify.py
 │   ├── arm_f11_precite.py
@@ -159,19 +217,28 @@ python3 -m http.server 8080
 # Install dependencies
 pip install -r requirements.txt
 
-# Configure environment
-cp env_example.sh .env
-# Edit .env with your API keys
+# Configure environment (edit, then source — this is a shell script, not a .env file)
+cp env_example.sh env.sh
+# edit env.sh: point ANTHROPIC_BASE_URL/ANTHROPIC_AUTH_TOKEN at your own
+# Anthropic-compatible gateway (https://api.anthropic.com works with no code changes)
+source env.sh
 
-# Run evaluation
-python3 eval/run.py
+# Run an arm on specific questions, then judge + fact-check the results
+python3 -m eval.run --arms B,F102,F11,F115 --questions q01,q02 --tag my_run
+python3 -m eval.run --judge results/my_run --samples 3
+python3 -m eval.run --fact results/my_run --v2 --arms B,F102,F11,F115
+
+# Rebuild dashboard data from your own run
+python3 scripts/dash_agg.py
+python3 scripts/dash_qa_build.py
+python3 scripts/embed_qa_data.py   # inline qa_data.json into dashboard.html
 ```
 
 <br/>
 
 ## 🙏 Acknowledgments
 
-- 5 topics borrowed from [DeepResearch Bench](https://github.com/GAIR-NLP/DeepResearch-Bench) for cross-validation
+- 5 of the 15 topics in `eval/questions_ext.json` (`e11`–`e15`) are used in the main n=15 comparison, borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0) — see `THIRD_PARTY_NOTICES.md` for full attribution
 - Evaluation design inspired by Anthropic's CitationAgent and Perplexity's search-layer pre-binding citation approach
 
 <br/>
