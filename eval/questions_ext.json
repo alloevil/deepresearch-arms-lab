@@ -1,0 +1,122 @@
+[
+ {
+  "id": "e01",
+  "topic": "Finance & Business",
+  "lang": "en",
+  "question": "From 2020 to 2050, how many elderly people will there be in Japan? What is their consumption potential across various aspects such as clothing, food, housing, and transportation? Based on population projections, elderly consumer willingness, and potential changes in their consumption habits, please produce a market size analysis report for the elderly demographic.",
+  "source": "DeepResearch-Bench#51 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e02",
+  "topic": "Finance & Business",
+  "lang": "en",
+  "question": "What are the investment philosophies of Duan Yongping, Warren Buffett, and Charlie Munger? ",
+  "source": "DeepResearch-Bench#52 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e03",
+  "topic": "Science & Technology",
+  "lang": "en",
+  "question": "Exploring Horizontal Gene Transfer (HGT) in Plants and animals (ie Non-Microbial Systems)\nYou could examine instances of horizontal gene transfer in eukaryotes—particularly plants and animals—and evaluate the evolutionary significance of these transfers. Its very rare and therefore must have a really interesting reason behind this adaptation!\nEspecially as this horizontal gene transfer has been well -studied in microbial systems, but not in plants and animals (this is a relatively new discovery).  Understanding  how commonly genes move between eukaryotic species and whether these transfers confer benefits would be really interesting to find out",
+  "source": "DeepResearch-Bench#58 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e04",
+  "topic": "Science & Technology",
+  "lang": "en",
+  "question": "In ecology, how do birds achieve precise location and direction navigation during migration? What cues and disturbances influence this process?",
+  "source": "DeepResearch-Bench#59 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e05",
+  "topic": "Health",
+  "lang": "en",
+  "question": "Could the rapeutic interventions aimed at modulating plasma metal ion concentrations represent effective preventive or therapeutic strategies against cardiovascular diseases? What types of interventions—such as supplementation—have been proposed, and is there clinical evidence supporting their feasibility and efficacy?",
+  "source": "DeepResearch-Bench#75 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e06",
+  "topic": "Crime & Law",
+  "lang": "en",
+  "question": "Analyze the complex issue of liability allocation in accidents involving vehicles with advanced driver-assistance systems (ADAS) operating in a shared human-machine driving context. Your analysis should integrate technical principles of ADAS, existing legal frameworks, and relevant case law to systematically examine the boundaries of responsibility between the driver and the system. Conclude with proposed regulatory guidelines or recommendations.",
+  "source": "DeepResearch-Bench#90 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e07",
+  "topic": "Finance & Business",
+  "lang": "zh",
+  "question": "收集整理目前中国9阶层实际收入和财务状况，特别研究得出中国的中产有哪些特点，实际中产人数，财力等等",
+  "source": "DeepResearch-Bench#1 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e08",
+  "topic": "Finance & Business",
+  "lang": "zh",
+  "question": "收集整理目前国际综合实力前十的保险公司的相关资料，横向比较各公司的融资情况、信誉度、过往五年的增长幅度、实际分红、未来在中国发展潜力等维度，并为我评估出最有可能在未来资产排名靠前的2-3家公司",
+  "source": "DeepResearch-Bench#2 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e09",
+  "topic": "Health",
+  "lang": "zh",
+  "question": "请为我整合近几年有关“中性粒细胞在脑缺血急性期和慢性期的功能和发展变化”的研究成果。在此基础上预测中性粒细胞各个亚群如何和其他的细胞类型发生相互作用，最终如何导向不同的临床结局。最后，为我分析未来可能需要开展的工作。",
+  "source": "DeepResearch-Bench#25 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e10",
+  "topic": "Health",
+  "lang": "zh",
+  "question": "为我调研在慢性抗原刺激下（如肿瘤微环境或HIV潜伏感染），CD8+ T细胞线粒体动力学（融合/裂变平衡）如何通过调控表观遗传重塑（如m6A修饰、乳酸介导的组蛋白乳酸化）驱动终末耗竭与组织驻留记忆（Trm）细胞命运分岔，基于代谢-表观遗传互作网络定量建模",
+  "source": "DeepResearch-Bench#26 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e11",
+  "topic": "Finance & Business",
+  "lang": "zh",
+  "question": "请帮我整理下目前全球具身智能发展的技术路线，以及各个路线的代表性公司，需要包括这些公司的技术路径，产品进度，商业化进度，融资情况，团队情况",
+  "source": "DeepResearch-Bench#6 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e12",
+  "topic": "Finance & Business",
+  "lang": "zh",
+  "question": "在当前中国房地产市场低迷的情况下，政府税收减少，这会多大程度上影响地方政府的财政收入",
+  "source": "DeepResearch-Bench#7 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e13",
+  "topic": "Science & Technology",
+  "lang": "zh",
+  "question": "收集整理全球数学与量子计算交叉领域的主要研究团队及其成果，横向比较其研究方向、论文产出、国际合作、资金支持、工业界合作等维度，评估哪些团队最有可能在未来5-10年内推动量子计算技术的重大突破，并预测可能产生的关键性数学理论或应用技术",
+  "source": "DeepResearch-Bench#14 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e14",
+  "topic": "Software Development",
+  "lang": "zh",
+  "question": "prometheus 的高流失率会造成什么影响，有什么系统的方案可以解决？各家云厂商有没有现有方案？",
+  "source": "DeepResearch-Bench#19 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e15",
+  "topic": "Transportation",
+  "lang": "zh",
+  "question": "国内城市轨道交通行业（主要指地铁）每年的碳滑板用量是多少？主要供应商的份额以及行业趋势分析",
+  "source": "DeepResearch-Bench#44 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ }
+]

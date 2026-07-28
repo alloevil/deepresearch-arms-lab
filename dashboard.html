@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deepresearch-lab · 实验全景</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --surface-1: #fcfcfb; --page: #f9f9f7;
+  --ink-1: #0b0b0b; --ink-2: #52514e; --ink-muted: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --good-text: #006300; --crit: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --good-text: #0ca30c; --crit: #d03b3b;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --surface-1: #1a1a19; --page: #0d0d0d;
+  --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-muted: #898781;
+  --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --good-text: #0ca30c; --crit: #d03b3b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.viz-root { background: var(--page); color: var(--ink-1); min-height: 100vh; padding: 32px 24px 64px; }
+.wrap { max-width: 1060px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 40px 0 4px; }
+.sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+.tile .label { font-size: 12px; color: var(--ink-2); }
+.tile .value { font-size: 30px; font-weight: 650; margin: 2px 0; }
+.tile .delta { font-size: 12px; color: var(--good-text); font-weight: 600; }
+.tile .note { font-size: 11px; color: var(--ink-muted); }
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); margin: 10px 0 4px; flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.axis-label { fill: var(--ink-muted); font-size: 11px; }
+.tick-num { font-variant-numeric: tabular-nums; }
+.direct-label { fill: var(--ink-1); font-size: 11px; }
+.direct-sub { fill: var(--ink-2); font-size: 10px; }
+#tooltip { position: fixed; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; color: var(--ink-1);
+  box-shadow: 0 4px 14px rgba(0,0,0,.18); display: none; z-index: 10; max-width: 260px; }
+#tooltip .t-title { font-weight: 650; margin-bottom: 2px; }
+#tooltip .t-row { color: var(--ink-2); }
+.timeline { list-style: none; margin: 16px 0 0; padding: 0; }
+.timeline li { display: grid; grid-template-columns: 74px 92px 1fr; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid var(--grid); font-size: 13px; align-items: baseline; }
+.timeline li:last-child { border-bottom: 0; }
+.tl-date { color: var(--ink-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.badge { font-size: 11px; font-weight: 650; padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+  justify-self: start; border: 1px solid var(--border); }
+.badge.win { color: var(--good-text); }
+.badge.neg { color: var(--crit); }
+.badge.fix { color: var(--ink-2); }
+.tl-body b { font-weight: 650; }
+.tl-body .m { color: var(--ink-2); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 12px; }
+th { text-align: left; color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--baseline); padding: 6px 8px; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+td:first-child, th:first-child { padding-left: 0; }
+.toggle { position: absolute; top: 24px; right: 24px; font-size: 12px; color: var(--ink-2);
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; cursor: pointer; }
+.learn { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-top: 16px; }
+.learn .card { font-size: 13px; line-height: 1.55; }
+.learn .card b { display: block; margin-bottom: 4px; }
+.foot { color: var(--ink-muted); font-size: 11.5px; margin-top: 32px; line-height: 1.6; }
+.model-rows { display: grid; gap: 10px; margin-top: 14px; }
+.model-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; font-size: 13px; align-items: baseline; }
+.model-row .k { color: var(--ink-2); font-weight: 600; }
+.model-row .v b { font-weight: 650; }
+.model-row .v .gw { color: var(--ink-muted); font-size: 12px; }
+.link-cell { color: var(--s1); cursor: pointer; text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 2px; }
+.link-cell:hover { text-decoration-color: var(--s1); }
+.hint { font-size: 11px; color: var(--ink-muted); margin-top: 8px; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+  align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.modal-backdrop.open { display: flex; }
+.modal-box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  width: min(760px, 100%); max-height: 86vh; display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.modal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 16px 20px; border-bottom: 1px solid var(--grid); }
+.modal-head h3 { margin: 0; font-size: 15px; }
+.modal-head .back { font-size: 12px; color: var(--s1); cursor: pointer; }
+.modal-x { cursor: pointer; color: var(--ink-muted); font-size: 20px; line-height: 1; background: none; border: none; padding: 0 2px; }
+.modal-body { padding: 16px 20px 20px; overflow-y: auto; font-size: 13px; }
+.qa-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.qa-table th { text-align: left; color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--baseline); padding: 6px 6px; }
+.qa-table td { padding: 8px 6px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+.qa-table tr.qa-row { cursor: pointer; }
+.qa-table tr.qa-row:hover td { background: var(--page); }
+.qa-q { font-size: 13px; color: var(--ink-2); line-height: 1.4; margin: 2px 0; }
+.qa-box { background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; }
+.qa-box .tag { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 4px; }
+.qa-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.chip { font-size: 11.5px; background: var(--page); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.qa-report { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px; line-height: 1.55; max-height: 46vh; overflow-y: auto; background: var(--page);
+  border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--ink-1); }
+</style>
+</head>
+<body>
+<div class="viz-root" style="position:relative">
+<button class="toggle" onclick="toggleTheme()">明暗切换</button>
+<div class="wrap">
+
+<h1>deepresearch-lab · 实验全景</h1>
+<p class="sub">目标:在弱基座(MiMo)上做出比裸 claude code agent 效果更好的 deep research · 中文题 ×15 · 2026-07-17 → 07-28</p>
+
+<div class="tiles">
+  <div class="card tile">
+    <div class="label">最终方案 F115 · 报告质量(judge)</div>
+    <div class="value">8.21</div>
+    <div class="delta">↑ +0.12 vs 裸 agent 8.09</div>
+    <div class="note">n=15 · 扩容后优势收窄(见下方 e15 个案)</div>
+  </div>
+  <div class="card tile">
+    <div class="label">最终方案 F115 · 引用忠实度(子句级)</div>
+    <div class="value">0.69</div>
+    <div class="delta">↑ +0.22 vs 裸 agent 0.47</div>
+    <div class="note">n=3029 子句 · 4K 尺同口径</div>
+  </div>
+  <div class="card tile">
+    <div class="label">可信性极点 F11 · 忠实度</div>
+    <div class="value">0.73</div>
+    <div class="delta">= 裸 agent 的 1.55×</div>
+    <div class="note">judge 7.88(n=15)· 错位/矛盾结构性趋零</div>
+  </div>
+  <div class="card tile">
+    <div class="label">尝试总数(arm 变体)</div>
+    <div class="value">14</div>
+    <div class="note">其中 6 个负结果同样入档 · 30+ 阶段执行零故障(F115)</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="font-size:13px;color:var(--ink-2)">评测配置 · 三个模型互相解耦,避免自评闭环</div>
+  <div class="model-rows">
+    <div class="model-row"><span class="k">被测系统</span><span class="v"><b>MiMo 2.5 Pro</b>（xiaomi/mimo-v2.5-pro）<span class="gw">· 全部 arm 统一执行器,消除模型差异干扰 · 执行器网关(Anthropic 协议桥接)</span></span></div>
+    <div class="model-row"><span class="k">质量裁判</span><span class="v"><b>Claude Opus 4.8</b>（claude-opus-4-8）<span class="gw">· 盲评 ×3 取中位 · 独立评测网关(与执行器解耦)</span></span></div>
+    <div class="model-row"><span class="k">引用/事实核验</span><span class="v"><b>Claude Sonnet 5</b>（claude-sonnet-5）<span class="gw">· fact-v2 子句级抓页核查 · 同经独立评测网关</span></span></div>
+  </div>
+</div>
+
+<h2>质量–可信性版图</h2>
+<p class="sub">每个点是一个 arm(横轴 judge 报告质量,纵轴子句级引用忠实度)。右上 = 双优。空心小点为 n=3 小样本。</p>
+<div class="card">
+  <div class="legend">
+    <span><i class="dot" style="background:var(--s1)"></i>交付方案</span>
+    <span><i class="dot" style="background:var(--s2)"></i>基线 / 外部系统</span>
+    <span><i class="dot" style="background:var(--s3)"></i>探索尝试(含负结果)</span>
+  </div>
+  <div id="scatter"></div>
+</div>
+
+<h2>各 arm 对比</h2>
+<p class="sub">同一评测体系(judge=opus-4-8 盲评 ×3;fact=子句级支持率,4K 尺全臂同口径)。</p>
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;color:var(--ink-2);margin-bottom:6px">报告质量 judge(0–10)</div>
+  <div id="bar-judge"></div>
+</div>
+<div class="card">
+  <div style="font-size:13px;color:var(--ink-2);margin-bottom:6px">引用忠实度 · 子句级支持率(0–1)</div>
+  <div id="bar-sub"></div>
+</div>
+
+<h2>实验历程</h2>
+<p class="sub">十天时间线:每一步做了什么、判决是什么。负结果与正结果同权入档。</p>
+<div class="card">
+<ul class="timeline">
+  <li><span class="tl-date">07-17</span><span class="badge fix">基线</span><span class="tl-body"><b>mimo_smoke 基线批</b>:B/B3/F91 三臂 ×10 题;provenance 双黑洞修复(meta 落 model+gateway,网关活体探针确认真 MiMo)<span class="m"> · F9.1 生成时台账协议证伪:弱基座守不住重协议(句级支撑 0.55)</span></span></li>
+  <li><span class="tl-date">07-20</span><span class="badge fix">调研</span><span class="tl-body"><b>主流方案调研</b>(35 条证据,FACT 回查 23/24):行业无人走"模型写作时自觉遵守引用协议"路——训练派 reward 内化,编排派管线化<span class="m"> · P0 = 引用后置化 + 采集侧预引用</span></span></li>
+  <li><span class="tl-date">07-20</span><span class="badge neg">跷跷板</span><span class="tl-body"><b>F10 / F10.1</b>(引用后置):精度赢但覆盖塌;补检索纪律后核对吞吐成为新瓶颈<span class="m"> · 教训:替换 B 的引用职责总在跷跷板上</span></span></li>
+  <li><span class="tl-date">07-20</span><span class="badge win">阶段胜</span><span class="tl-body"><b>F10.2 = B + 后置核修</b>:十题零故障;十对配对证明核修净代价 −0.15(噪声内),引用覆盖 +56%、矛盾减 2/3<span class="m"> · 同时发现 B 的 run 间 judge 方差 ~1.0 → 同 run 配对成为标准口径</span></span></li>
+  <li><span class="tl-date">07-20</span><span class="badge neg">完败</span><span class="tl-body"><b>arm G = GPT-Researcher + MiMo</b>:judge 5.75 / 严格率 0——榜单强者迁移不过"中文+弱基座+自有检索源";唯一亮点 150s/题<span class="m"> · 接入踩了配额/timeout/英文 embedding 滤空中文三层洋葱</span></span></li>
+  <li><span class="tl-date">07-21</span><span class="badge fix">修尺子</span><span class="tl-body"><b>评测体系加固</b>:FPR 审计(超写告警误报率 0.50,根因=抓页 4K 截断丢尾部证据)→ 24K 旁路重跑全量 → 臂间排序双尺一致,结论对尺子鲁棒<span class="m"> · fact-v2 另经 DEER-VERI(ICML26)独立校准</span></span></li>
+  <li><span class="tl-date">07-21</span><span class="badge win">突破</span><span class="tl-body"><b>F11 采集侧预引用</b>:read 页 harness 发 [Sn] 编号,写作只填标号——错位/矛盾被结构性消灭,协议遵守 100%<span class="m"> · n=10 定版:忠实度 0.75(裸 agent 1.53×),judge 8.12</span></span></li>
+  <li><span class="tl-date">07-21<br>–23</span><span class="badge neg">三连负</span><span class="tl-body"><b>F11.1 / F11.2 / F11.3</b>(加广度 / 双通道解禁 / 原子句):三次写作侧扰动全部劣化忠实度<span class="m"> · 铁律:F11 的"没读过不得写"本身就是机制,单 pass 上加任何东西都打破弱基座的脆弱平衡</span></span></li>
+  <li><span class="tl-date">07-24</span><span class="badge fix">诊断</span><span class="tl-body"><b>partial 聚合诊断</b>:配对级严格率被 worst-of 聚合系统性低估(一句打包 5.1 子句、错 1 个全句判负)→ 评测主口径切子句级<span class="m"> · 曝光/核对行为两个 verify 侧杠杆同期证伪</span></span></li>
+  <li><span class="tl-date">07-24</span><span class="badge win">双优出现</span><span class="tl-body"><b>F11.4-split 研究/写作分离</b>:广度纪律放专职研究阶段,写作无网(工具级隔离)只从预编号笔记抄标号——judge 8.83 + 忠实度 0.68,标号从紧凑笔记抄使错位减半</span></li>
+  <li><span class="tl-date">07-24<br>–25</span><span class="badge win">最终交付</span><span class="tl-body"><b>F115 全栈合成</b>= 预引用研究 → 无网写作 → 后置核修:n=10 judge 8.84 + 忠实度 0.69,双轴同超裸 agent,30 阶段零故障<span class="m"> · 行业三结论合体:研究写作分离(LangChain)+ 预引用(Perplexity/GPT-R)+ 后置核修(Anthropic CitationAgent)</span></span></li>
+  <li><span class="tl-date">07-27</span><span class="badge fix">情报</span><span class="tl-body"><b>Grok Build /deep-research 发布(07-26)</b>:多 agent 并行核验、缺口披露、平台层引用绑定——与 F115 四点独立收敛;xAI 自认 inline citations 不保证每句引 = G-Cite 不可靠的最强基座旁证</span></li>
+  <li><span class="tl-date">07-28</span><span class="badge neg">扩容重验</span><span class="tl-body"><b>题库 10→15 题(借自 DeepResearch Bench,已注明出处)</b>:B/F102/F11/F115 优势普遍收窄——F115 judge 优势 +0.66→+0.12(8.84→8.21);根因 e15(地铁碳滑板供应商份额,检索资料稀缺)F115 诚实交白卷被裁判重罚至 2.62,B 靠参数化知识垫分拿 7.12<span class="m"> · 与既有认知一致:可信性收益的代价是检索覆盖不足会被直接暴露,题目分布越难越吃这个亏——结论方向不变(F115 仍双优于 B),但幅度对题库鲁棒性弱于此前认为</span></span></li>
+</ul>
+</div>
+
+<h2>核心认知(负结果的价值)</h2>
+<div class="learn">
+  <div class="card"><b>引用是管线问题,不是模型自觉问题</b>行业(含 Grok 4.20)都不把引用押在模型写作自觉上。弱基座上唯一有效的路径:harness 发编号、模型填空、程序渲染 URL、独立 pass 核修。</div>
+  <div class="card"><b>单 pass 认知预算是硬约束</b>三次失败(广度/双通道/原子句)共因相同:往写作 pass 加任何职责都挤掉原有纪律。解法是分阶段付账——研究广度、写作纪律、引用修复各占一个 pass。</div>
+  <div class="card"><b>测量和被测系统一样需要审计</b>FPR 审计发现超写告警一半是冤枉的(尺子抓页截断);配对口径消掉 B 的 ~1.0 run 间方差;子句级口径去掉聚合低估。三次修尺都改变了结论的读法。</div>
+  <div class="card"><b>成熟系统救不了弱基座</b>GPT-Researcher(CMU 评测引用忠实第一)接上 MiMo+中文全面崩盘;真正有效的是在强 harness(claude code)上做轻量前/后处理,而非更换编排。</div>
+</div>
+
+<h2>数据表(全部 arm)</h2>
+<p class="sub">点击任意一行的 arm 名,查看该组测试的逐题问题原文、报告全文与评分明细。</p>
+<div class="card" style="overflow-x:auto">
+  <table id="data-table"></table>
+</div>
+
+<p class="foot">
+数据来源:results/mimo_smoke 产物实时聚合(judge=opus-4-8 盲评 ×3 中位;fact=fact-v2,4K 尺全臂同口径)。
+B/F102/F11/F115 四臂为 n=15(q01-10 自建 + e11-15 借自 DeepResearch Bench,Apache-2.0 已注明出处);
+其余 10 个探索性 arm 仍为 n=3,受 run 间方差(~1.0 judge)影响大,仅作方向参考。完整实验台账见 EXPERIMENTS.md。生成于 2026-07-28。
+</p>
+
+</div>
+<div id="tooltip"></div>
+<div class="modal-backdrop" id="modal-backdrop" onclick="if(event.target===this) closeModal()">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <span class="back" id="modal-back" onclick="backToArmList()" style="display:none">← 返回题目列表</span>
+      </div>
+      <h3 id="modal-title" style="flex:1"></h3>
+      <button class="modal-x" onclick="closeModal()" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+ "B":    {name:"B · 裸 claude code",        group:2, judge:8.09, sub:0.47, n:15, pairs:203, overclaim:33, conflict:34, misattr:8,  secs:402,  note:"基线:质量高但引用密度随题目难度大幅波动"},
+ "B3":   {name:"B3 · 协议 prompt",           group:3, judge:8.04, sub:0.48, n:10, pairs:269, overclaim:47, conflict:50, misattr:7,  secs:929,  note:"sonnet 时代的增益未迁移到 MiMo"},
+ "F91":  {name:"F9.1 · 生成时台账",          group:3, judge:8.13, sub:0.48, n:10, pairs:281, overclaim:27, conflict:52, misattr:7,  secs:1217, note:"证伪:弱基座守不住逐字登记协议"},
+ "F10":  {name:"F10 · 引用后置",             group:3, judge:7.58, sub:0.72, n:3,  pairs:21,  overclaim:1,  conflict:4,  misattr:0,  secs:1168, note:"精度赢覆盖塌"},
+ "F101": {name:"F10.1 · +检索纪律",          group:3, judge:7.75, sub:0.53, n:3,  pairs:38,  overclaim:4,  conflict:2,  misattr:2,  secs:1621, note:"核对吞吐瓶颈"},
+ "F102": {name:"F10.2 · B+后置核修",         group:1, judge:7.69, sub:0.58, n:15, pairs:207, overclaim:31, conflict:22, misattr:4,  secs:846,  note:"轻量选项:judge≈B(配对),覆盖修复+诚实性"},
+ "F103": {name:"F10.3 · 核修曝光3×",         group:3, judge:8.00, sub:0.41, n:3,  pairs:20,  overclaim:7,  conflict:0,  misattr:1,  secs:1054, note:"负结果:曝光杠杆无效"},
+ "F11":  {name:"F11 · 采集侧预引用",         group:1, judge:7.88, sub:0.73, n:15, pairs:400, overclaim:26, conflict:44, misattr:29, secs:461,  note:"可信性极点:错位矛盾结构性趋零"},
+ "F111": {name:"F11.1 · +广度配额",          group:3, judge:7.54, sub:0.68, n:3,  pairs:67,  overclaim:4,  conflict:2,  misattr:5,  secs:1862, note:"负结果:源多则标号张冠李戴"},
+ "F112": {name:"F11.2 · 双通道解禁",         group:3, judge:8.83, sub:0.74, n:3,  pairs:111, overclaim:6,  conflict:26, misattr:8,  secs:430,  note:"负结果:纪律被无视,矛盾回潮"},
+ "F113": {name:"F11.3 · 原子句",             group:3, judge:8.60, sub:0.55, n:3,  pairs:72,  overclaim:11, conflict:4,  misattr:7,  secs:418,  note:"负结果:诱导更多弱接地断言"},
+ "F114": {name:"F11.4 · 研究/写作分离",      group:3, judge:8.83, sub:0.68, n:3,  pairs:108, overclaim:8,  conflict:16, misattr:6,  secs:533,  note:"双优中间点,F115 的前身"},
+ "F115": {name:"F115 · 全栈合成 ★",          group:1, judge:8.21, sub:0.69, n:15, pairs:581, overclaim:62, conflict:41, misattr:25, secs:973,  note:"n=15 优势收窄:e15 检索资料稀缺,诚实交白卷被裁判重罚(2.62)"},
+ "G":    {name:"G · GPT-Researcher",         group:2, judge:5.75, sub:0.45, n:3,  pairs:5,   overclaim:1,  conflict:0,  misattr:0,  secs:150,  note:"外部系统完败;唯一亮点 150s/题"}
+};
+const GROUPS = {1:"var(--s1)", 2:"var(--s2)", 3:"var(--s3)"};
+const tooltip = document.getElementById('tooltip');
+let QA_DATA = {};
+fetch('qa_data.json').then(r => r.json()).then(d => { QA_DATA = d; }).catch(() => {});
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+const backdrop = document.getElementById('modal-backdrop');
+const modalTitle = document.getElementById('modal-title');
+const modalBody = document.getElementById('modal-body');
+const modalBack = document.getElementById('modal-back');
+let currentArm = null;
+
+function openArm(key){
+  currentArm = key;
+  const items = QA_DATA[key];
+  const d = DATA[key];
+  modalBack.style.display = 'none';
+  modalTitle.textContent = `${d.name} · 题目列表`;
+  if (!items || !items.length){
+    modalBody.innerHTML = `<p class="qa-q">该组暂无落盘的逐题产物(可能仍在跑批,或该 arm 未纳入本次聚合)。</p>`;
+  } else {
+    const rows = items.map(it => `<tr class="qa-row" onclick="openQA('${key}','${it.qid}')">
+        <td>${escapeHtml(it.qid)}</td><td>${escapeHtml(it.topic)}</td>
+        <td>${it.judge ? it.judge.overall.toFixed(1) : '—'}</td>
+        <td>${it.fact && it.fact.subclaims ? (it.fact.subclaims.supported / Math.max(1, it.fact.subclaims.total)).toFixed(2) : '—'}</td>
+        <td>${it.seconds ?? '—'}</td></tr>`).join('');
+    modalBody.innerHTML = `<table class="qa-table">
+      <thead><tr><th>题号</th><th>主题</th><th>judge</th><th>子句支持率</th><th>秒</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+  backdrop.classList.add('open');
+}
+
+function openQA(key, qid){
+  const items = QA_DATA[key] || [];
+  const it = items.find(x => x.qid === qid);
+  const d = DATA[key];
+  if (!it) return;
+  modalBack.style.display = 'inline';
+  modalTitle.textContent = `${qid} · ${d.name}`;
+  const f = it.fact || {};
+  const p = f.pairs || {}, sc = f.subclaims || {};
+  const chips = [
+    it.judge ? `judge ${it.judge.overall.toFixed(1)}${it.judge.samples && it.judge.samples.length ? ' (' + it.judge.samples.map(x=>x.toFixed(1)).join('/') + ')' : ''}` : null,
+    sc.total ? `子句支持 ${sc.supported}/${sc.total}` : null,
+    p.not_found != null ? `超写 ${p.not_found}` : null,
+    (p.contradicted || p.conflict_temporal || p.conflict_substantive) != null ?
+      `矛盾 ${(p.contradicted||0)+(p.conflict_temporal||0)+(p.conflict_substantive||0)}` : null,
+    it.seconds ? `${it.seconds}s` : null,
+    it.model_main ? `模型 ${it.model_main}` : null,
+  ].filter(Boolean).map(c => `<span class="chip">${escapeHtml(c)}</span>`).join('');
+  modalBody.innerHTML = `
+    <div class="qa-box"><div class="tag">问题原文</div><div class="qa-q">${escapeHtml(it.question)}</div></div>
+    <div class="qa-chips" style="margin-bottom:14px">${chips}</div>
+    ${it.judge && it.judge.rationale ? `<div class="qa-box"><div class="tag">裁判理由</div><div class="qa-q">${escapeHtml(it.judge.rationale)}</div></div>` : ''}
+    <div class="tag" style="color:var(--ink-muted);font-size:11px;margin-bottom:6px">报告全文</div>
+    <div class="qa-report">${escapeHtml(it.report)}</div>`;
+  backdrop.classList.add('open');
+}
+
+function backToArmList(){ if (currentArm) openArm(currentArm); }
+function closeModal(){ backdrop.classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function showTip(evt, key){
+  const d = DATA[key];
+  tooltip.innerHTML = `<div class="t-title">${d.name}</div>
+    <div class="t-row">judge ${d.judge.toFixed(2)} · 忠实度 ${d.sub.toFixed(2)} · n=${d.n} 题</div>
+    <div class="t-row">引用对 ${d.pairs} · 超写 ${d.overclaim} · 矛盾 ${d.conflict} · 错位 ${d.misattr}</div>
+    <div class="t-row">均时 ${d.secs}s/题 · ${d.note}</div>`;
+  tooltip.style.display = 'block';
+  const pad = 14, w = 270;
+  let x = evt.clientX + pad, y = evt.clientY + pad;
+  if (x + w > innerWidth) x = evt.clientX - w - pad;
+  tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+}
+function hideTip(){ tooltip.style.display = 'none'; }
+
+/* ---------- scatter ---------- */
+(function(){
+  const W = 980, H = 460, m = {t: 18, r: 30, b: 44, l: 52};
+  const x0 = 5.4, x1 = 9.3, y0 = 0.38, y1 = 0.80;
+  const X = v => m.l + (v - x0) / (x1 - x0) * (W - m.l - m.r);
+  const Y = v => H - m.b - (v - y0) / (y1 - y0) * (H - m.t - m.b);
+  let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="质量-可信性散点图">`;
+  for (let gx = 6; gx <= 9; gx++)
+    s += `<line x1="${X(gx)}" y1="${m.t}" x2="${X(gx)}" y2="${H-m.b}" stroke="var(--grid)" stroke-width="1"/>
+          <text class="axis-label tick-num" x="${X(gx)}" y="${H-m.b+18}" text-anchor="middle">${gx}</text>`;
+  for (let gy = 0.4; gy <= 0.81; gy += 0.1)
+    s += `<line x1="${m.l}" y1="${Y(gy)}" x2="${W-m.r}" y2="${Y(gy)}" stroke="var(--grid)" stroke-width="1"/>
+          <text class="axis-label tick-num" x="${m.l-8}" y="${Y(gy)+4}" text-anchor="end">${gy.toFixed(1)}</text>`;
+  s += `<line x1="${m.l}" y1="${H-m.b}" x2="${W-m.r}" y2="${H-m.b}" stroke="var(--baseline)" stroke-width="1"/>`;
+  s += `<text class="axis-label" x="${(m.l+W-m.r)/2}" y="${H-6}" text-anchor="middle">报告质量 judge →</text>`;
+  s += `<text class="axis-label" transform="rotate(-90)" x="${-(m.t+H-m.b)/2}" y="14" text-anchor="middle">引用忠实度(子句级)→</text>`;
+  // 标签偏移微调,避免重叠
+  const off = {B:[14,-20], B3:[-12,18], F91:[16,18], F10:[10,4], F101:[10,4], F102:[10,4], F103:[10,4],
+               F11:[10,-6], F111:[-10,16], F112:[-64,-10], F113:[10,4], F114:[12,14], F115:[12,-8], G:[10,4]};
+  for (const k in DATA){
+    const d = DATA[k], big = d.n >= 10, r = big ? 8 : 6;
+    const fill = big ? GROUPS[d.group] : 'var(--surface-1)';
+    const [dx, dy] = off[k] || [10, 4];
+    s += `<circle cx="${X(d.judge)}" cy="${Y(d.sub)}" r="${r}" fill="${fill}"
+            stroke="${GROUPS[d.group]}" stroke-width="2" style="cursor:pointer"
+            onmousemove="showTip(event,'${k}')" onmouseleave="hideTip()" onclick="openArm('${k}')"/>`;
+    const anchor = dx < 0 ? 'end' : 'start';
+    s += `<text class="direct-label" x="${X(d.judge)+dx}" y="${Y(d.sub)+dy}" text-anchor="${anchor}"
+            style="pointer-events:none">${k}${big ? '' : '·3题'}</text>`;
+  }
+  s += `</svg>`;
+  document.getElementById('scatter').innerHTML = s;
+})();
+
+/* ---------- horizontal bars ---------- */
+function bars(elId, field, max, fmt){
+  const keys = Object.keys(DATA).sort((a,b) => DATA[b][field] - DATA[a][field]);
+  const rowH = 26, W = 980, lw = 210, vw = 60;
+  const H = keys.length * rowH + 26;
+  const bw = W - lw - vw - 20;
+  let s = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img">`;
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    s += `<line x1="${lw + bw*f}" y1="4" x2="${lw + bw*f}" y2="${H-22}" stroke="var(--grid)" stroke-width="1"/>
+          <text class="axis-label tick-num" x="${lw + bw*f}" y="${H-8}" text-anchor="middle">${fmt(max*f)}</text>`;
+  });
+  keys.forEach((k, i) => {
+    const d = DATA[k], y = i * rowH + 6, w = Math.max(2, d[field] / max * bw);
+    s += `<text class="direct-label" x="${lw-10}" y="${y+12}" text-anchor="end">${d.name.split(' · ')[0]}<tspan class="direct-sub"> ${d.name.split(' · ')[1]||''}${d.n<10?' ·3题':''}</tspan></text>`;
+    s += `<path d="M${lw},${y} h${w-4} a4,4 0 0 1 4,4 v8 a4,4 0 0 1 -4,4 h-${w-4} z"
+            fill="${GROUPS[d.group]}" style="cursor:pointer"
+            onmousemove="showTip(event,'${k}')" onmouseleave="hideTip()" onclick="openArm('${k}')"/>`;
+    s += `<text class="direct-label tick-num" x="${lw + w + 8}" y="${y+12}">${fmt(d[field])}</text>`;
+  });
+  s += `<line x1="${lw}" y1="4" x2="${lw}" y2="${H-22}" stroke="var(--baseline)" stroke-width="1"/></svg>`;
+  document.getElementById(elId).innerHTML = s;
+}
+bars('bar-judge', 'judge', 10, v => v.toFixed(v === 10 ? 0 : 1));
+bars('bar-sub', 'sub', 1, v => v.toFixed(2));
+
+/* ---------- table ---------- */
+(function(){
+  const rows = Object.keys(DATA).map(k => {
+    const d = DATA[k];
+    return `<tr><td><span class="link-cell" onclick="openArm('${k}')">${d.name}</span></td><td>${d.n}</td><td>${d.judge.toFixed(2)}</td><td>${d.sub.toFixed(2)}</td>
+      <td>${d.pairs}</td><td>${d.overclaim}</td><td>${d.conflict}</td><td>${d.misattr}</td><td>${d.secs}</td><td style="font-variant-numeric:normal;color:var(--ink-2)">${d.note}</td></tr>`;
+  }).join('');
+  document.getElementById('data-table').innerHTML =
+    `<thead><tr><th>arm</th><th>题数</th><th>judge</th><th>忠实度</th><th>引用对</th><th>超写</th><th>矛盾</th><th>错位</th><th>秒/题</th><th>备注</th></tr></thead><tbody>${rows}</tbody>`;
+})();
+
+function toggleTheme(){
+  const r = document.documentElement;
+  const cur = r.getAttribute('data-theme');
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  r.setAttribute('data-theme', (cur ? cur === 'dark' : dark) ? 'light' : 'dark');
+}
+
+/* 调试/深链:#arm=F115 或 #qa=F115:q01 直接打开对应弹窗 */
+(function(){
+  const h = location.hash.slice(1);
+  if (!h) return;
+  const tryOpen = () => {
+    if (h.startsWith('qa=')){
+      const [k, qid] = h.slice(3).split(':');
+      if (QA_DATA[k]) openQA(k, qid); else setTimeout(tryOpen, 100);
+    } else if (h.startsWith('arm=')){
+      const k = h.slice(4);
+      if (QA_DATA[k] !== undefined || DATA[k]) openArm(k);
+    }
+  };
+  setTimeout(tryOpen, 300);
+})();
+</script>
+</div>
+</body>
+</html>

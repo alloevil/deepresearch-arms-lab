@@ -1,0 +1,9 @@
+results/
+logs/
+.env
+*.log
+__pycache__/
+search_calls.jsonl
+.venv*/
+.pytest_cache/
+*.pyc
