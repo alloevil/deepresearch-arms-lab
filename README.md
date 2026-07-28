@@ -83,9 +83,9 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Mechanism | judge | faithful. | n | Verdict |
 |:---:|:---|---:|---:|---:|:---:|
-| B | Bare execution (no citation protocol) | 8.09 | 0.47 | 15 | ![#6B7280](https://via.placeholder.com/12/6B7280/6B7280.png) Baseline |
-| B3 | + citation protocol prompt | 8.04 | 0.48 | 10 | ![#EF4444](https://via.placeholder.com/12/EF4444/EF4444.png) Gains didn't transfer |
-| F9.1 | + key claims registry during generation | 8.13 | 0.48 | 10 | ![#EF4444](https://via.placeholder.com/12/EF4444/EF4444.png) Weak model can't hold protocol |
+| B | Bare execution (no citation protocol) | 8.09 | 0.47 | 15 | ![baseline](https://img.shields.io/badge/●-Baseline-gray?style=flat&labelColor=transparent) |
+| B3 | + citation protocol prompt | 8.04 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Gains%20didn't%20transfer-red?style=flat&labelColor=transparent) |
+| F9.1 | + key claims registry during generation | 8.13 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Weak%20model%20can't%20hold%20protocol-red?style=flat&labelColor=transparent) |
 
 ### ✅ Validated: Pipeline-Level Solutions
 
@@ -93,9 +93,9 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Mechanism | judge | faithful. | n | Approach |
 |:---:|:---|---:|---:|---:|:---:|
-| F10 | Post-hoc citation (withdraw protocol) | 7.58 | 0.72 | 3 | ![#3B82F6](https://via.placeholder.com/12/3B82F6/3B82F6.png) Post-hoc |
-| **F10.2** | **B + independent post-hoc verification** | **7.67** | **0.72** | **3** | ![#3B82F6](https://via.placeholder.com/12/3B82F6/3B82F6.png) **Post-hoc** |
-| **F11** | **Source-side pre-citation** | 7.63 | **0.73** | **10** | ![#8B5CF6](https://via.placeholder.com/12/8B5CF6/8B5CF6.png) **Pre-cite** |
+| F10 | Post-hoc citation (withdraw protocol) | 7.58 | 0.72 | 3 | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
+| **F10.2** | **B + independent post-hoc verification** | **7.67** | **0.72** | **3** | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
+| **F11** | **Source-side pre-citation** | 7.63 | **0.73** | **10** | ![pre-cite](https://img.shields.io/badge/●-Pre--cite-purple?style=flat&labelColor=transparent) |
 
 ### ⚠️ Boundary Exploration
 
@@ -103,9 +103,9 @@ Pre-cite research → offline writing → post-hoc verification. **Dual-optimal 
 
 | Arm | Variation | judge | faithful. | n | Effect |
 |:---:|:---|---:|---:|---:|:---:|
-| F11.1 | + allow background knowledge | 7.80 | 0.55 | 3 | ![#F59E0B](https://via.placeholder.com/12/F59E0B/F59E0B.png) ↓ faith. -0.18 |
-| F11.2 | + relax per-source limit | 7.97 | 0.55 | 3 | ![#F59E0B](https://via.placeholder.com/12/F59E0B/F59E0B.png) ↓ faith. -0.18 |
-| F11.3 | + atomic sentence splitting | 8.17 | 0.59 | 3 | ![#F59E0B](https://via.placeholder.com/12/F59E0B/F59E0B.png) ↓ faith. -0.14 |
+| F11.1 | + allow background knowledge | 7.80 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.18 |
+| F11.2 | + relax per-source limit | 7.97 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.18 |
+| F11.3 | + atomic sentence splitting | 8.17 | 0.59 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. -0.14 |
 
 <br/>
 
