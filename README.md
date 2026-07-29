@@ -33,11 +33,11 @@ Having the model maintain a "key claims registry" (F9.1) is essentially adding a
 </td>
 <td width="50%">
 
-### ⚖️ The Real Tradeoff (revised at n=19)
+### ⚖️ The Real Tradeoff (revised at n=24)
 
 **Pipeline structure reliably buys faithfulness — but it isn't free, and there's no dual-optimal winner.**
 
-All three structural mechanisms (F10.2, F11, F115) now score *below* the bare baseline on judged quality at n=19. The discount for faithfulness ranges from mild (F115: −0.06 judge for +0.22 faithfulness) to steep (F102: −0.30 for +0.10). Pick based on which axis your use case actually weights.
+All three structural mechanisms (F10.2, F11, F115) now score *below* the bare baseline on judged quality at n=24. The discount for faithfulness ranges from mild (F115: −0.08 judge for +0.24 faithfulness) to steep (F102/F11: −0.26 for +0.12/+0.26). Pick based on which axis your use case actually weights.
 
 </td>
 </tr>
@@ -57,7 +57,7 @@ Three independent perturbations (F11.1/F11.2/F11.3) all degraded faithfulness �
 
 **Not a single-question fluke — it's a systematic effect on low-evidence topics, confirmed by expanding the test set.**
 
-At n=15, one retrieval-poor question made F115 honestly report a blank answer and get penalized. Expanding to n=20 with more soft, less-quantifiable topics (low-code tooling debates, education policy, wastewater-treatment reform, box-office rankings) reproduced the same penalty — one of those five questions (box-office rankings) was later removed for an unrelated reason (see the n=19 note below), but even without it, the other four alone flip F115's net judge-quality delta from +0.12 to **−0.06**, confirming this isn't a one-question artifact.
+At n=15, one retrieval-poor question made F115 honestly report a blank answer and get penalized. Expanding to n=20 with more soft, less-quantifiable topics (low-code tooling debates, education policy, wastewater-treatment reform, box-office rankings) reproduced the same penalty — one of those five questions (box-office rankings) was later removed for an unrelated reason (see the Arm Comparison table below), but even without it, the other four alone flip F115's net judge-quality delta from +0.12 to −0.06. **A follow-up round deliberately picked 5 "hard", data-rich topics** (gold-price technical analysis, contactless-sensing algorithm benchmarks, a specific Anthropic protocol spec, jewelry-trend surveys, a market-sizing question) to check whether the effect was just a soft-topic artifact — it wasn't: at n=24 the gap didn't close, landing at **−0.08**.
 
 </td>
 </tr>
@@ -71,11 +71,11 @@ At n=15, one retrieval-poor question made F115 honestly report a blank answer an
 
 ### 🔬 Highest Faithfulness-Per-Point-Lost: F115 — Three-Stage Pipeline
 
-Pre-cite research → offline writing → post-hoc verification. **At n=19, this is no longer dual-optimal** — it trades a small amount of judged quality for the biggest faithfulness gain among the full pipelines. Not "the winner," but the best rate on this specific tradeoff.
+Pre-cite research → offline writing → post-hoc verification. **At n=24, this is no longer dual-optimal** — it trades a small amount of judged quality for the biggest faithfulness gain among the full pipelines. Not "the winner," but the best rate on this specific tradeoff.
 
-| Arm | judge | faithful. | n | delta vs B (n=19) |
+| Arm | judge | faithful. | n | delta vs B (n=24) |
 |:---|---:|---:|---:|---:|
-| [**F115**](arms/arm_f115_full.py) | **7.95** | **0.66** | **19** | quality −0.06, faith. +0.22 |
+| [**F115**](arms/arm_f115_full.py) | **7.77** | **0.66** | **24** | quality −0.08, faith. +0.24 |
 
 ### 📌 Baseline & Negative Results
 
@@ -83,21 +83,21 @@ Pre-cite research → offline writing → post-hoc verification. **At n=19, this
 
 | Arm | Mechanism | judge | faithful. | n | Verdict |
 |:---:|:---|---:|---:|---:|:---:|
-| [B](arms/arm_b_claude_code.py) | Bare execution (no citation protocol) | 8.01 | 0.44 | 19 | ![baseline](https://img.shields.io/badge/●-Baseline-gray?style=flat&labelColor=transparent) |
+| [B](arms/arm_b_claude_code.py) | Bare execution (no citation protocol) | 7.85 | 0.42 | 24 | ![baseline](https://img.shields.io/badge/●-Baseline-gray?style=flat&labelColor=transparent) |
 | [B3](arms/arm_b3_protocol.py) | + citation protocol prompt | 8.04 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Gains%20didn't%20transfer-red?style=flat&labelColor=transparent) |
 | [F9.1](arms/arm_f91_evidence.py) | + key claims registry during generation | 8.13 | 0.48 | 10 | ![negative](https://img.shields.io/badge/●-Weak%20model%20can't%20hold%20protocol-red?style=flat&labelColor=transparent) |
 
 ### 🔀 Faithfulness vs. Quality: Structural Solutions
 
-> Three directions that **reliably improve faithfulness** via structural changes — but all now cost judged quality at n=19. Worth it depends on your priorities, not a free win.
+> Three directions that **reliably improve faithfulness** via structural changes — but all now cost judged quality at n=24. Worth it depends on your priorities, not a free win.
 
 | Arm | Mechanism | judge | faithful. | n | delta judge / faith. vs B |
 |:---:|:---|---:|---:|---:|:---:|
 | [F10](arms/arm_f10_postcite.py) | Post-hoc citation (withdraw protocol) | 7.58 | 0.72 | 3 | ![post-hoc](https://img.shields.io/badge/●-Post--hoc-blue?style=flat&labelColor=transparent) |
-| [**F10.2**](arms/arm_f102_postverify.py) | **B + independent post-hoc verification** | **7.71** | **0.54** | **19** | −0.30 / +0.10 |
-| [**F11**](arms/arm_f11_precite.py) | **Source-side pre-citation** | **7.81** | **0.69** | **19** | −0.20 / +0.25 |
+| [**F10.2**](arms/arm_f102_postverify.py) | **B + independent post-hoc verification** | **7.59** | **0.54** | **24** | −0.26 / +0.12 |
+| [**F11**](arms/arm_f11_precite.py) | **Source-side pre-citation** | **7.59** | **0.68** | **24** | −0.26 / +0.26 |
 
-*A fifth n=20 question (top-10 box-office rankings) was dropped after F11 hit a reproducible 60-turn budget ceiling on it twice (retried, identical failure) and it was also the one question where F115 made outright factual errors rather than honestly flagging gaps. Removing it brings all four arms to a uniform n=19 — the tradeoff finding above holds without it (see Known Limitations).*
+*A fifth n=20 question (top-10 box-office rankings) was dropped after F11 hit a reproducible 60-turn budget ceiling on it twice (retried, identical failure) and it was also the one question where F115 made outright factual errors rather than honestly flagging gaps. A follow-up round then added 5 more "hard" data-rich questions specifically to rule out a soft-topic artifact (see Key Findings) — the gap held, so both rounds are folded into this uniform n=24.*
 
 ### ⚠️ Boundary Exploration
 
@@ -161,7 +161,8 @@ Disclosed here instead of glossed over, since the project's own thesis is that h
 - **No token/cost instrumentation.** `meta.json`'s `tokens.in/out` fields are always 0 in this round — `avg_secs` (wall-clock time per run) is the only cost proxy available. "Is the extra pipeline stage worth it?" can only be answered on latency here, not token spend.
 - **The GPT-Researcher comparison (arm G) is n=3.** Labeled preliminary everywhere it's mentioned — not enough samples to support "external systems necessarily fail on weak base models" as a strong claim.
 - **Judge scores have real run-to-run variance** (~1.0 on the same prompt, measured empirically). Any two-arm comparison should be read alongside its `n`, not as a bare point estimate.
-- **The topic mix changes the headline numbers a lot.** At n=10, F115 led B by +0.66 judge; at n=15, +0.12; at n=19 (after adding softer, less-quantifiable topics), **−0.06**. The mechanism behind this (honest disclosure of retrieval gaps gets penalized more than confident glossing-over) is consistent and explainable, not noise — but it means none of these numbers should be treated as a fixed, topic-independent property of the arm. Expect them to keep moving as the test set grows.
+- **The topic mix changes the headline numbers a lot.** At n=10, F115 led B by +0.66 judge; at n=15, +0.12; at n=24 (after adding both softer topics and, in a follow-up round, deliberately "hard" data-rich ones to rule out a soft-topic artifact), **−0.08**. The mechanism behind this (honest disclosure of retrieval gaps gets penalized more than confident glossing-over) is consistent and explainable, not noise — but it means none of these numbers should be treated as a fixed, topic-independent property of the arm. Expect them to keep moving as the test set grows.
+- **fact-v2 has a blind spot for non-URL citations.** On one question about contactless-sensing algorithms, B and F102 both cited academic papers in `Author, "Title," Venue, Year` format with no URLs — fact-v2 verifies by fetching the cited page, so it scored 0 checkable pairs for both (their faithfulness on that question is simply unmeasured, not confirmed good or bad). F11 and F115 aren't affected the same way, because their pre-citation mechanism structurally forces citing a page they actually fetched — which incidentally means it also pushed the model away from citing papers directly, even on a topic where that's arguably the more natural citation style. Not a bug to silently patch around; noted here because it's a real gap in what the ruler can see.
 
 <br/>
 
@@ -241,7 +242,7 @@ python3 scripts/embed_qa_data.py   # inline qa_data.json into dashboard.html
 
 ## 🙏 Acknowledgments
 
-- 9 of the 19 topics in `eval/questions_ext.json` (`e11`–`e19`) are used in the main n=19 comparison, borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0) — see `THIRD_PARTY_NOTICES.md` for full attribution
+- 14 of the 24 topics in `eval/questions_ext.json` (`e11`–`e19`, `e21`–`e25`) are used in the main n=24 comparison, borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0) — see `THIRD_PARTY_NOTICES.md` for full attribution
 - Evaluation design inspired by Anthropic's CitationAgent and Perplexity's search-layer pre-binding citation approach
 
 <br/>

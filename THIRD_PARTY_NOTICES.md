@@ -6,12 +6,14 @@ its original license and attribution.
 
 ## DeepResearch Bench questions (Apache License 2.0)
 
-`eval/questions_ext.json` contains 19 research questions (ids `e01`–`e19`)
-borrowed verbatim from the **DeepResearch Bench** project. Of these, `e11`–`e19`
-(9 questions) are used in this repo's main n=19 comparison (added to the 10
-self-authored questions in `eval/questions.json`); `e01`–`e10` were used in
-earlier exploratory generalization checks documented in `EXPERIMENTS.md` and
-are not part of the main comparison table. (A 20th borrowed question,
+`eval/questions_ext.json` contains 24 research questions (ids `e01`–`e19`,
+`e21`–`e25`; `e20` was intentionally skipped to avoid reusing the id of a
+removed question — see below) borrowed verbatim from the **DeepResearch
+Bench** project. Of these, `e11`–`e19` and `e21`–`e25` (14 questions) are
+used in this repo's main n=24 comparison (added to the 10 self-authored
+questions in `eval/questions.json`); `e01`–`e10` were used in earlier
+exploratory generalization checks documented in `EXPERIMENTS.md` and are
+not part of the main comparison table. (A 20th borrowed question,
 box-office rankings, was tried and removed — see `EXPERIMENTS.md` for why.)
 
 - Source: https://github.com/Ayanami0730/deep_research_bench
