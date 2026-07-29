@@ -6,9 +6,9 @@ its original license and attribution.
 
 ## DeepResearch Bench questions (Apache License 2.0)
 
-`eval/questions_ext.json` contains 15 research questions (ids `e01`–`e15`)
-borrowed verbatim from the **DeepResearch Bench** project. Of these, `e11`–`e15`
-(5 questions) are used in this repo's main n=15 comparison (added to the 10
+`eval/questions_ext.json` contains 20 research questions (ids `e01`–`e20`)
+borrowed verbatim from the **DeepResearch Bench** project. Of these, `e11`–`e20`
+(10 questions) are used in this repo's main n=20 comparison (added to the 10
 self-authored questions in `eval/questions.json`); `e01`–`e10` were used in
 earlier exploratory generalization checks documented in `EXPERIMENTS.md` and
 are not part of the main comparison table.

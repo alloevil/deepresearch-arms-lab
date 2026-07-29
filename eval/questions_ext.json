@@ -118,5 +118,45 @@
   "question": "国内城市轨道交通行业（主要指地铁）每年的碳滑板用量是多少？主要供应商的份额以及行业趋势分析",
   "source": "DeepResearch-Bench#44 (Apache-2.0, Ayanami0730/deep_research_bench)",
   "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e16",
+  "topic": "Finance & Business",
+  "lang": "zh",
+  "question": "中国金融未来的发展趋势，未来哪一个细分领域（例如投行、pe、固收等）更有上升空间",
+  "source": "DeepResearch-Bench#3 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e17",
+  "topic": "Software Development",
+  "lang": "zh",
+  "question": "\"在当今软件开发行业中，低代码/无代码平台对传统开发流程的影响有多大？它们是否真正提高了开发效率，还是在特定场景下反而增加了维护成本？\"\n为什么这个问题有价值？\n行业趋势：低代码/无代码开发近年来发展迅速，许多企业尝试采用它们来加快产品交付速度。\n生产力 vs. 维护成本：这些工具宣称能降低开发门槛，但长期来看，它们是否真的能提高效率，还是在维护和扩展时带来了更多问题？\n开发者视角 vs. 业务视角：企业管理者可能认为它们降低了成本，但开发者可能认为它们限制了可扩展性和灵活性。\n未来发展预测：是否会有越来越多企业完全转向低代码/无代码，还是它们只适用于特定业务场景？",
+  "source": "DeepResearch-Bench#17 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e18",
+  "topic": "Education & Jobs",
+  "lang": "zh",
+  "question": "现在AI这么热门，我最感兴趣的就是人工智能在教育领域应用现状，实际能落地的场景还有在教育领域所面临的挑战，再就是反过来教育对培养人工智能高尖端人才的支撑作用如何强化，学校都有怎样的对应的培养AI人才的体系。",
+  "source": "DeepResearch-Bench#21 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e19",
+  "topic": "Industrial",
+  "lang": "zh",
+  "question": "市政污水收集和处理大部分城市采取的模式是核拨制，但这种机制造成了效率的不足，作为政府管理部门有何种操作性比较强的方案实现高效？（考虑排水系统建设，运营，维护，改造，应急等各方面的成本，同时考虑与雨水排洪排涝之间的协作关系，如何共同运作，降低成本，实现良性循环）",
+  "source": "DeepResearch-Bench#35 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
+ },
+ {
+  "id": "e20",
+  "topic": "Entertainment",
+  "lang": "zh",
+  "question": "收集整理目前中国电影票房前十的电影的相关资料，横向比较各电影的主题、技制作公司、题材、时长等维度，并为我评估出最有可能在未来实现高票房的电影类型",
+  "source": "DeepResearch-Bench#41 (Apache-2.0, Ayanami0730/deep_research_bench)",
+  "canary": "drlab-canary-c4a1f0e97b3d"
  }
 ]
