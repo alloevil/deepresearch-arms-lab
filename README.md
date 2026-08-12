@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/Focus-Deep%20Research%20Pipeline%20Design-FF6B6B?style=for-the-badge&labelColor=0D1117&logo=target&logoColor=white" />
   <img src="https://img.shields.io/badge/Method-14_arm%20Ablation-8B5CF6?style=for-the-badge&labelColor=0D1117&logo=flask&logoColor=white" />
   <img src="https://img.shields.io/badge/Eval-Claude%20Opus%204.8%20Blind%20Judging-58A6FF?style=for-the-badge&labelColor=0D1117&logo=openai&logoColor=white" />
+  <a href="https://github.com/alloevil/deepresearch-arms-lab/releases/latest"><img src="https://img.shields.io/github/v/release/alloevil/deepresearch-arms-lab?style=for-the-badge&labelColor=0D1117&logo=github&color=3FB950" /></a>
 </p>
 
 <br/>
