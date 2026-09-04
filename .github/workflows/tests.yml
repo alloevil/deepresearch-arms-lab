@@ -17,5 +17,4 @@ jobs:
           python-version: '3.12'
           cache: pip
       - run: pip install -r requirements.txt pytest
-      # test_eval_upgrades.py imports eval.contamination, which is not in the repo; skipped until restored.
-      - run: python -m pytest tests -q --ignore=tests/test_eval_upgrades.py
+      - run: python -m pytest tests -q
