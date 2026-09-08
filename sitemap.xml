@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Every markdown page here resolves at BOTH extensions: Jekyll renders each
+       .md into a themed .html (self-referential rel=canonical, verified live) and
+       also serves the raw .md as text/markdown. The .html is listed as canonical;
+       the .md is deliberately left crawlable as an LLM-readable surface and must
+       not be Disallowed, and must not be added here as a duplicate entry. -->
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/dashboard.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/EXPERIMENTS.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/deepresearch-progress-report.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/hybrid-v6-report.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/f91-vs-b3-report.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/research-dr-mainstream-20260720.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/evidence-dr-mainstream.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/deepresearch-survey-notes.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/docs-report-snapshot.html</loc></url>
+  <url><loc>https://alloevil.github.io/deepresearch-arms-lab/THIRD_PARTY_NOTICES.html</loc></url>
+</urlset>

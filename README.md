@@ -1,3 +1,7 @@
+# deepresearch-arms-lab
+
+**deepresearch-arms-lab** is a 14-arm ablation study on deep-research pipeline design that measures which prompt and pipeline mechanisms actually reduce citation fabrication on a weak base model, for engineers building autonomous research agents.
+
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:1F6FEB,100:8B5CF6&height=220&section=header&text=deepresearch-arms-lab&fontSize=60&fontColor=FFFFFF&fontAlignY=35&desc=14-arm%20ablation%20study%20on%20deep%20research%20pipelines&descSize=18&descAlignY=55&animation=fadeIn" width="100%" alt="deepresearch-arms-lab — 14-arm ablation study on deep research pipelines"/>
 </p>
@@ -8,6 +12,12 @@
   <img src="https://img.shields.io/badge/Eval-Claude%20Opus%204.8%20Blind%20Judging-58A6FF?style=for-the-badge&labelColor=0D1117&logo=openai&logoColor=white" />
   <a href="https://github.com/alloevil/deepresearch-arms-lab/releases/latest"><img src="https://img.shields.io/github/v/release/alloevil/deepresearch-arms-lab?style=for-the-badge&labelColor=0D1117&logo=github&color=3FB950" /></a>
 </p>
+
+<br/>
+
+## What it is
+
+Fourteen prompt and pipeline designs, built as runnable code under `arms/`, all evaluated by one shared harness: Claude Opus 4.8 blind judging on a RACE-style four-dimension rubric (median of 3, 0–10) for quality, plus fact-v2 clause-level support rate (0–1) for faithfulness, which re-fetches every cited page and checks the clause against it. Same base model, same search backend behind one wrapper, same questions for every arm. The mechanisms split into four families — self-discipline while writing, post-hoc citation repair, source-side pre-citation, and research/writing separation — with GPT-Researcher as an external baseline. **Negative results and retracted conclusions are kept in the log rather than edited out**, because the study is about faithfulness and quietly deleting a number that moved would be the same failure it measures.
 
 <br/>
 
@@ -216,6 +226,22 @@ python3 -m http.server 8080
 
 <br/>
 
+## Install
+
+Python 3.12 (the version CI runs) plus four dependencies, and an Anthropic-compatible gateway for the judge and the arms:
+
+```bash
+git clone https://github.com/alloevil/deepresearch-arms-lab.git
+cd deepresearch-arms-lab
+pip install -r requirements.txt
+cp env_example.sh env.sh   # edit ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN, then:
+source env.sh
+```
+
+Reading the published results needs no install at all — `dashboard.html` has its data inlined and opens offline.
+
+<br/>
+
 ## 🚀 Quick Start
 
 ```bash
@@ -238,6 +264,43 @@ python3 scripts/dash_agg.py
 python3 scripts/dash_qa_build.py
 python3 scripts/embed_qa_data.py   # inline qa_data.json into dashboard.html
 ```
+
+<br/>
+
+## When to use it
+
+- You are choosing a citation strategy for a research agent and want the **measured** trade-off — how much judged quality each faithfulness mechanism costs — rather than plausible-sounding advice.
+- You are working with a weak or small base model and need to know which mechanisms survive that. Several that sound reasonable do not: asking for a protocol, requiring a claims ledger, allowing an uncited "background knowledge" channel.
+- You want a worked example of an eval harness with real controls: one search backend behind a wrapper with the agents' own web tools disabled, blind anonymised shuffled judging, median-of-3 with dispersion reported, a closed-book baseline, and a contamination audit.
+- You want the raw per-question artefacts — question, full report, scoring rationale — to inspect rather than a summary table. Click any arm or topic in the dashboard.
+
+## When NOT to use it
+
+- **You want a recommendation to copy.** There isn't one. At n=24 all three structural arms score *below* the bare baseline on judged quality; which to pick depends on whether your use case weights "reads complete" or "everything said is grounded". The earlier single-winner framing was withdrawn — see Key Findings.
+- **You want numbers that generalise to a strong model.** Everything here is measured on one weak base model (MiMo 2.5 Pro), and several findings are specifically about weak-model failure modes.
+- **You want cost or token comparisons.** Not instrumented: `tokens.in/out` are 0 for this whole round, so wall-clock latency is the only cost proxy.
+- **You want statistical significance.** Judge scores vary run-to-run by roughly 1.0 on the same prompt. The n=10 Hybrid-v6 comparison gave a paired bootstrap 95% CI of [−0.06, +0.21] around +0.09 — crossing zero, with n≈60 estimated to detect an effect that size. Read every number next to its `n`; several arms are n=3 and labelled exploratory.
+- **You expect the headline numbers to hold still.** They have not: the same F115-vs-baseline comparison moved 0.74 points as the question set grew from 10 to 24. Expect further movement.
+- **You need faithfulness measured on academic citations.** fact-v2 verifies by fetching the cited page, so `Author, "Title," Venue, Year` citations without URLs score zero checkable pairs — on one question two arms were simply unmeasured. Disclosed as a known blind spot in the ruler, not patched around.
+
+<br/>
+
+## FAQ
+
+**What is the single most important finding?**
+Structural mechanisms reliably buy citation faithfulness and reliably cost judged quality, with no dual-optimal option at n=24: F115 trades 0.08 judge points for 0.24 faithfulness, F11 trades 0.26 for 0.26, F10.2 trades 0.26 for 0.12. The cause is explainable and reproducible rather than noise — a pipeline that refuses to write what it could not retrieve produces an honest blank, and both the judge and most human readers penalise an honest blank more than a smooth, confident, unsupported paragraph.
+
+**Why keep negative results and retracted conclusions in the log?**
+Because the study is about faithfulness, and quietly deleting a number that moved would be the same failure it measures. `EXPERIMENTS.md` therefore still contains, with corrections attached: the +0.66 headline that became −0.08, the "dual-optimal winner" framing withdrawn at n=20, a win/loss tally that was mis-recorded and corrected against `scores.json`, the F9.1 ledger protocol that produced no gain, three F11 perturbations that all failed, and the search-quota exhaustion incident that became a finding in its own right.
+
+**How does source-side pre-citation make fabricated URLs impossible?**
+The search and read tools are wrapped so every fetched page gets a stable numeric id injected into a header the model sees. The writing rule is mechanical: you may only cite a page you were assigned a number for, and you write the number, never a URL. Code then converts each number into a real footnote with the URL filled in. The model never writes a URL, so it cannot invent one. Measured cost at n=24 is 0.26 judge points, plus one real failure mode: on a multi-page comparison question the per-page numbering overhead hit a 60-turn ceiling twice in independent retries.
+
+**Can I compare the absolute scores across tables?**
+No. Judge scores drift roughly 1.0 run-to-run on the same prompt, and switching to a date-injected judge prompt shifted arm scores by 0.3–0.6. Only same-batch, same-judge comparisons are meaningful, which is why every table carries its `n` and the log repeatedly warns against cross-table comparison of absolutes.
+
+**Where do the questions come from, and is contamination handled?**
+Ten are this project's own Chinese research topics in `eval/questions.json`. The n=24 comparison uses 14 questions borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0), attributed in `THIRD_PARTY_NOTICES.md`. Contamination is audited on three levels by `eval/contamination.py`, and `run.py --no-search` gives a closed-book baseline so that open-book minus closed-book isolates real retrieval gain from the model's parametric knowledge.
 
 <br/>
 
