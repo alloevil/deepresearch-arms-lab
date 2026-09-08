@@ -14,8 +14,32 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="deepresearch-arms-lab — 14-arm 消融实验">
 <meta name="twitter:description" content="Deep research 流水线消融研究：引用策略与流程设计对报告质量与可信性的影响。">
+<style>
+body { margin: 0; padding: 32px 24px 64px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.7; color: #0b0b0b; background: #f9f9f7; }
+main { max-width: 680px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 12px; }
+p { margin: 0 0 14px; }
+.jump { font-size: 13px; color: #52514e; }
+a { color: #2a78d6; }
+@media (prefers-color-scheme: dark) {
+  body { color: #ffffff; background: #0d0d0d; }
+  .jump { color: #c3c2b7; }
+  a { color: #3987e5; }
+}
+</style>
 </head>
 <body>
-<p>跳转中… 如果没有自动跳转,请点击 <a href="dashboard.html">dashboard.html</a> 查看实验结果面板。</p>
+<main>
+<h1>deepresearch-arms-lab — Deep Research 流水线 14-arm 消融实验</h1>
+<p>本仓库把 14 种 deep research 提示词与流水线设计写成可运行代码(<code>arms/</code>),放在同一套评测台上比较:
+同一个弱基座模型(MiMo 2.5 Pro)、同一个检索后端、同一批中文研究题目。报告质量由 Claude Opus 4.8 盲评(RACE
+式四维量规,三次取中位,0–10),引用忠实度由 fact-v2 重新抓取每个被引页面、按子句核对支持率(0–1)。这些机制分成
+四族:写作时自律、事后引用修复、来源侧预引用、research/write 分离,并以 GPT-Researcher 作为外部基线。</p>
+<p>被推翻的结论与负结果一并留在台账里,不做事后删改——这项研究的对象正是引用的可信性。</p>
+<p class="jump">正在跳转到实验结果面板。如果没有自动跳转,请点击
+<a href="dashboard.html">实验结果面板 dashboard.html</a>:质量与忠实度散点图、arm 排名、实验时间线;点任意 arm
+或题目可查看原始问题、报告全文与评分理由。</p>
+</main>
 </body>
 </html>
