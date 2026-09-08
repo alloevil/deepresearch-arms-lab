@@ -14,6 +14,35 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="deepresearch-arms-lab — 14-arm 消融实验全景">
 <meta name="twitter:description" content="Deep research 流水线消融研究：引用策略与流程设计对报告质量的影响。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "deepresearch-arms-lab — 14-arm ablation study on deep research pipelines",
+  "alternateName": "deepresearch-arms-lab",
+  "description": "14-arm ablation study measuring which prompt and pipeline mechanisms reduce citation fabrication in deep-research report generation on a weak base model. Quality scored by Claude Opus 4.8 blind judging (median of 3, 0-10); faithfulness scored by fact-v2 clause-level support rate (0-1). Negative results and retracted conclusions are retained.",
+  "url": "https://alloevil.github.io/deepresearch-arms-lab/dashboard.html",
+  "sameAs": "https://github.com/alloevil/deepresearch-arms-lab",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "inLanguage": ["zh-CN", "en"],
+  "keywords": ["deep research agent", "citation faithfulness", "ablation study", "pre-citation", "post-hoc citation verification", "LLM-as-judge", "negative results", "weak base model"],
+  "creator": {"@type": "Person", "name": "alloevil", "url": "https://github.com/alloevil"},
+  "measurementTechnique": "Claude Opus 4.8 blind judging on a RACE-style four-dimension rubric, median of 3 samples; fact-v2 clause-level citation support rate computed by re-fetching each cited page",
+  "variableMeasured": [
+    {"@type": "PropertyValue", "name": "judge", "description": "Blind judged report quality, 0-10, median of 3 samples"},
+    {"@type": "PropertyValue", "name": "faithfulness", "description": "fact-v2 clause-level citation support rate, 0-1"},
+    {"@type": "PropertyValue", "name": "n", "description": "Number of research questions the arm completed in the batch"},
+    {"@type": "PropertyValue", "name": "avg_secs", "description": "Mean wall-clock seconds per question, the only cost proxy available in this round"}
+  ],
+  "distribution": {
+    "@type": "DataDownload",
+    "name": "Per-question evaluation data",
+    "encodingFormat": "application/json",
+    "contentUrl": "https://alloevil.github.io/deepresearch-arms-lab/qa_data.json"
+  }
+}
+</script>
 <style>
 .viz-root {
   color-scheme: light;
