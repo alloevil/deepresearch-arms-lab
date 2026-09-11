@@ -2,7 +2,7 @@
 
 > deepresearch-arms-lab is a 14-arm ablation study on deep-research pipeline design that measures which prompt and pipeline mechanisms actually reduce citation fabrication on a weak base model, for engineers building autonomous research agents.
 
-One question, answered with numbers instead of intuition: can a weak Chinese base model write a good research report *and* avoid fabricating citations? Fourteen prompt/pipeline designs ("arms") were built as runnable code, evaluated with one shared harness — Claude Opus 4.8 blind judging (median of 3) for quality, fact-v2 clause-level support rate for faithfulness — all on the same base model (MiMo 2.5 Pro), the same search backend and the same questions. The headline result is a **negative** one and is stated as such: at n=24 all three structural mechanisms score *below* the bare baseline on judged quality, and the earlier "dual-optimal winner" claim was retracted when the question set grew. Install with `pip install -r requirements.txt`; the results dashboard needs no server at all.
+One question, answered with numbers instead of intuition: can a weak Chinese base model write a good research report *and* avoid fabricating citations? Fourteen prompt/pipeline designs ("arms") were built as runnable code, evaluated with one shared harness — Claude Opus 4.8 blind judging (median of 3) for quality, fact-v2 clause-level support rate for faithfulness — all on the same base model (MiMo 2.5 Pro) and the same search backend, over subsets of one shared question bank (n=24 / n=10 / n=3, shown beside each figure). The headline result is a **negative** one and is stated as such: at n=24 all three structural mechanisms score *below* the bare baseline on judged quality, and the earlier "dual-optimal winner" claim was retracted when the question set grew. Install with `pip install -r requirements.txt`; the results dashboard needs no server at all.
 
 ## Docs
 - [Interactive results dashboard](https://alloevil.github.io/deepresearch-arms-lab/dashboard.html): quality-vs-faithfulness scatter, arm rankings, experiment timeline; click any arm or topic for the original question, the full report and the scoring rationale
@@ -20,13 +20,13 @@ One question, answered with numbers instead of intuition: can a weak Chinese bas
 - [claims.json](https://alloevil.github.io/deepresearch-arms-lab/claims.json): every number below with its metric, method, repro command and evidence link
 - [Per-question evaluation data](https://alloevil.github.io/deepresearch-arms-lab/qa_data.json): the raw question/report/score payload the dashboard renders
 - F115 (three-stage pipeline) at n=24: judge **7.77** vs baseline **7.85** (−0.08), faithfulness **0.66** vs **0.42** (+0.24) — a real trade-off, not a free win
-- F11 (source-side pre-citation) at n=24: judge **7.59** (−0.26), faithfulness **0.68** (+0.26) — the biggest faithfulness gain and the biggest quality cost
+- F11 (source-side pre-citation) at n=24: judge **7.59** (−0.26), faithfulness **0.68** (+0.26) — the biggest faithfulness gain and the biggest quality cost among the n=24 arms
 - F10.2 (post-hoc verification) at n=24: judge **7.59** (−0.26), faithfulness **0.54** (+0.12)
 - The headline moved as the test set grew: F115's judge advantage over the baseline was **+0.66 at n=10, +0.12 at n=15, −0.08 at n=24**. Verified in [EXPERIMENTS.md](https://alloevil.github.io/deepresearch-arms-lab/EXPERIMENTS.html), where the superseded claims are left in place rather than edited out.
-- Negative result kept: a key-claims registry maintained during writing (F9.1) gave **0.48 vs 0.48** faithfulness against a plain citation-protocol prompt (B3) at n=10, with roughly doubled latency
+- Negative result kept: a key-claims registry maintained during writing (F9.1) gave **0.48 vs 0.48** faithfulness against a plain citation-protocol prompt (B3) at n=10, with per-question latency about 3× the bare baseline's (1217 s vs 404 s on the same 10 questions; 1.3× B3's)
 - Preliminary and labelled as such: GPT-Researcher on the same weak base model scored judge **5.75** / faithfulness **0.45** at **n=3**
 
 ## Source
 - [GitHub repository](https://github.com/alloevil/deepresearch-arms-lab)
-- [All 31 arm implementations](https://github.com/alloevil/deepresearch-arms-lab/tree/master/arms): the 14 in the comparison plus 17 superseded earlier-round arms kept for the record
+- [All 31 arm implementations](https://github.com/alloevil/deepresearch-arms-lab/tree/master/arms): the 14 with committed per-question results (all 14 in the dashboard, all 14 tabled or listed in the README) plus 17 superseded earlier-round arms kept for the record
 - [Evaluation harness](https://github.com/alloevil/deepresearch-arms-lab/tree/master/eval): blind judge, fact-v2 citation check, contamination audit, question sets

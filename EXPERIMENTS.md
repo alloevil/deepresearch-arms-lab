@@ -14,8 +14,8 @@
   median-of-3 取中位数并输出 std/spread 量化打分离散度；可选 `--judges` 多裁判
   鲁棒聚合、`--judge-drift` rubric 措辞漂移诊断（`eval/judge.py`）
 - **客观指标（不依赖裁判 rubric）**：引用可核实率（`--fact`，`--fact-sample 0`
-  全量核验，落 over_cite/not_found 支持矩阵）；过程指标（`eval/process_metrics.py`
-  的 ev_used_ratio 等）；污染审计（`eval/contamination.py`，STC 三级 BML/QCL/EAL）
+  全量核验，落 over_cite/not_found 支持矩阵）；过程指标（ev_used_ratio 等）；
+  污染审计（`eval/contamination.py`，STC 三级 BML/QCL/EAL）
 - **闭卷基线**：`run.py --no-search` 禁检索跑同题，Δ(开卷−闭卷)=检索净增益，
   诊断参数化知识依赖（LiveBrowseComp 方法）
 - **公平性控制**：所有方案同一执行模型、同一搜索后端（`common/search_cli.py`
@@ -106,7 +106,7 @@ SearchSwarm 的"+10 分"不迁移到长报告场景；q01_B2 搜索次数暴涨�
 （B 系常态 15-30 次）分数不动，证明**长报告瓶颈在综合与验收，不在检索吞吐**。
 
 **引用真实性审计上线**（search_cli → run 目录 search_calls.jsonl）：本批新 run 的
-ev_used_ratio 全部 0.97-1.0，引用可机械追溯到真实检索（`eval/process_metrics.py`）。
+ev_used_ratio 全部 0.97-1.0，引用可机械追溯到真实检索。
 
 **裁判噪声提示**：换用日期注入裁判后各 arm 分数有 ±0.3-0.6 漂移（如 Workflow-v3 8.21→7.83、
 Agent-OpenCode 8.38→8.13、Pipeline 6.54→6.86），单裁判单次打分的方差不可忽略；上表为同一裁判

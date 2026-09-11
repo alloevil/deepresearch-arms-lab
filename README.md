@@ -17,7 +17,7 @@
 
 ## What it is
 
-Fourteen prompt and pipeline designs, built as runnable code under `arms/`, all evaluated by one shared harness: Claude Opus 4.8 blind judging on a RACE-style four-dimension rubric (median of 3, 0–10) for quality, plus fact-v2 clause-level support rate (0–1) for faithfulness, which re-fetches every cited page and checks the clause against it. Same base model, same search backend behind one wrapper, same questions for every arm. The mechanisms split into four families — self-discipline while writing, post-hoc citation repair, source-side pre-citation, and research/writing separation — with GPT-Researcher as an external baseline. **Negative results and retracted conclusions are kept in the log rather than edited out**, because the study is about faithfulness and quietly deleting a number that moved would be the same failure it measures.
+Fourteen prompt and pipeline designs, built as runnable code under `arms/`, all evaluated by one shared harness: Claude Opus 4.8 blind judging on a RACE-style four-dimension rubric (median of 3, 0–10) for quality, plus fact-v2 clause-level support rate (0–1) for faithfulness, which re-fetches every cited page and checks the clause against it. Same base model and the same search backend behind one wrapper for every arm; arms ran subsets of one shared question bank (n=24 / n=10 / n=3, always shown in the tables). The judge model is the harness default (`eval/judge.py`, `claude-opus-4-8`, overridable with `LAB_JUDGE_MODEL`), and each run records its judge metadata (model, rubric hash, date, sample count) in the `results/` tree, which is not published — the published `qa_data.json` keeps only `overall`/`rationale`/`samples`. The mechanisms split into four families — self-discipline while writing, post-hoc citation repair, source-side pre-citation, and research/writing separation — with GPT-Researcher as an external baseline. **Negative results and retracted conclusions are kept in the log rather than edited out**, because the study is about faithfulness and quietly deleting a number that moved would be the same failure it measures.
 
 <br/>
 
@@ -39,7 +39,7 @@ Fourteen prompt and pipeline designs, built as runnable code under `arms/`, all 
 
 **"Self-disciplined citation during writing" doesn't work.**
 
-Having the model maintain a "key claims registry" (F9.1) is essentially adding a heavy protocol — the weak base model can't hold it. Sentence-level support rate stays flat, latency doubles.
+Having the model maintain a "key claims registry" (F9.1) is essentially adding a heavy protocol — the weak base model can't hold it. Clause-level support rate stays flat (0.48 vs 0.48 at n=10) and each run takes about 3× the bare baseline's wall-clock time (mean 1217 s vs 404 s on the same 10 questions; 1.3× B3's).
 
 </td>
 <td width="50%">
@@ -78,11 +78,11 @@ At n=15, one retrieval-poor question made F115 honestly report a blank answer an
 
 ## 📊 Arm Comparison
 
-> Judge = Claude Opus 4.8 blind eval ×3 median; Fact = fact-v2 clause-level support rate. **n is a critical column to check.**
+> Judge = Claude Opus 4.8 blind eval ×3 median; Fact = fact-v2 clause-level support rate. **n is a critical column to check.** All values are aggregated from the committed `qa_data.json`; the n=24 rows date from the 2026-07-29 aggregation recorded in `EXPERIMENTS.md`, the n=3/n=10 rows from earlier batches (2026-07-09 – 2026-07-24).
 
 ### 🔬 Highest Faithfulness-Per-Point-Lost: F115 — Three-Stage Pipeline
 
-Pre-cite research → offline writing → post-hoc verification. **At n=24, this is no longer dual-optimal** — it trades a small amount of judged quality for the biggest faithfulness gain among the full pipelines. Not "the winner," but the best rate on this specific tradeoff.
+Pre-cite research → offline writing → post-hoc verification. **At n=24, this is no longer dual-optimal** — it trades a small amount of judged quality for the best faithfulness gain per judge point lost (−0.08 judge for +0.24 faithfulness, against F11's −0.26 for +0.26). Not "the winner," but the best rate on this specific tradeoff.
 
 | Arm | judge | faithful. | n | delta vs B (n=24) |
 |:---|---:|---:|---:|---:|
@@ -112,13 +112,25 @@ Pre-cite research → offline writing → post-hoc verification. **At n=24, this
 
 ### ⚠️ Boundary Exploration
 
-> Perturbations to F11 that **all degraded faithfulness** — single-pass cognitive budget is insufficient.
+> Perturbations to F11 that **all degraded faithfulness** — single-pass cognitive budget is insufficient. Faithfulness deltas are against F11 **on the same 3 questions** (F11 = 0.78 there); F11's own row in the table above shows 0.68, which is the n=24 batch and not the right comparator.
 
 | Arm | Variation | judge | faithful. | n | Effect |
 |:---:|:---|---:|---:|---:|:---:|
-| [F11.1](arms/arm_f111_precite.py) | + breadth quota (wider retrieval budget) | 7.54 | 0.68 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. −0.05, misattribution appears with more sources |
-| [F11.2](arms/arm_f112_dualchannel.py) | + dual-channel (allow background/parametric knowledge alongside citations) | 8.83 | 0.74 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) discipline ignored — contradictions return despite similar subclaim rate |
-| [F11.3](arms/arm_f113_atomic.py) | + force one atomic claim per sentence | 8.60 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. −0.18, induces more weakly-grounded assertions |
+| [F11.1](arms/arm_f111_precite.py) | + breadth quota (wider retrieval budget) | 7.54 | 0.68 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. 0.68 vs F11's 0.78 on the same 3 questions (−0.10); misattribution appears with more sources |
+| [F11.2](arms/arm_f112_dualchannel.py) | + dual-channel (allow background/parametric knowledge alongside citations) | 8.83 | 0.74 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) discipline ignored — strict pair support 0.52→0.29 and contradictions return (faith. 0.74 vs F11's 0.78 same-batch, −0.04) |
+| [F11.3](arms/arm_f113_atomic.py) | + force one atomic claim per sentence | 8.60 | 0.55 | 3 | ![degraded](https://img.shields.io/badge/●-degraded-orange?style=flat&labelColor=transparent) ↓ faith. 0.55 vs F11's 0.78 on the same 3 questions (−0.23); induces more weakly-grounded assertions |
+
+### 🧾 Remaining Measured Arms (n=3, exploratory)
+
+> The three arms below carry committed per-question results in `qa_data.json` (all 14 do, and `dashboard.html` shows all 14) but sit outside the headline n=24 comparison. **F10.3 is an explicit negative result** — the exposure lever it tests did not work; it is kept here rather than dropped.
+
+| Arm | Mechanism | judge | faithful. | n | Verdict |
+|:---:|:---|---:|---:|---:|:---:|
+| [F10.1](arms/arm_f101_postcite.py) | F10 + B3-style retrieval discipline | 7.75 | 0.53 | 3 | ![negative](https://img.shields.io/badge/●-Verification%20bottleneck-red?style=flat&labelColor=transparent) coverage recovers, verification throughput becomes the new bottleneck |
+| [F10.3](arms/arm_f103_exposure.py) | F10.2 core-fix with 3× verify exposure | 8.00 | 0.41 | 3 | ![negative](https://img.shields.io/badge/●-Negative%20result-red?style=flat&labelColor=transparent) the exposure lever is ineffective |
+| [F11.4](arms/arm_f114_precite.py) | F11 split into separate research and offline-writing passes | 8.83 | 0.68 | 3 | ![info](https://img.shields.io/badge/●-F115%20precursor-blue?style=flat&labelColor=transparent) the measured midpoint between F11 and F115 |
+
+Same-batch anchors on these 3 questions (q01/q05/q09): B 8.96 / 0.44, F11 0.78. F10.3's negative verdict is recorded in `EXPERIMENTS.md` (verify exposure 8K→24K, n=8 paired: strict rate 0.30→0.33, contradictions 4→6, Δjudge −0.23 — rolled back to the 8K default).
 
 ### 🌍 External System Comparison
 
@@ -140,7 +152,7 @@ The one-line "Mechanism" column above compresses a lot — here's what each fami
 
 - **[B](arms/arm_b_claude_code.py)**: one continuous pass, ordinary prompting. No special citation machinery — this is "just ask the model to do deep research."
 - **[B3](arms/arm_b3_protocol.py)**: same single pass, but the prompt adds an explicit citation protocol (cite every factual claim, follow a specific format). Tests whether *asking nicely* is enough.
-- **[F9.1](arms/arm_f91_evidence.py)**: goes further — the model must maintain a running "key-claims ledger" file, appending each claim and its verbatim source excerpt *before* it's allowed to use that claim in the report. Tests whether external bookkeeping discipline holds up under a heavier protocol. It doesn't: the weak model can't reliably maintain the ledger, and latency roughly doubles for no faithfulness gain.
+- **[F9.1](arms/arm_f91_evidence.py)**: goes further — the model must maintain a running "key-claims ledger" file, appending each claim and its verbatim source excerpt *before* it's allowed to use that claim in the report. Tests whether external bookkeeping discipline holds up under a heavier protocol. It doesn't: the weak model can't reliably maintain the ledger, and a run takes about 3× the bare baseline's wall-clock time (mean 1217 s vs 404 s on the same 10 questions; 1.3× B3's) for no faithfulness gain.
 
 ### 2️⃣ Post-hoc citation repair (F10 → F10.2) — audit after the fact
 
@@ -169,7 +181,7 @@ The one-line "Mechanism" column above compresses a lot — here's what each fami
 
 Disclosed here instead of glossed over, since the project's own thesis is that honesty about gaps beats a smoother-looking number:
 
-- **No token/cost instrumentation.** `meta.json`'s `tokens.in/out` fields are always 0 in this round — `avg_secs` (wall-clock time per run) is the only cost proxy available. "Is the extra pipeline stage worth it?" can only be answered on latency here, not token spend.
+- **No token/cost figures.** The gateway returned no usage block in this round, so `meta.json`'s `tokens.in/out` fields are 0 — `avg_secs` (wall-clock time per run) is the only cost proxy available. This is a gateway gap, not missing instrumentation: `common/core.py` reads the API usage block and `eval/run.py` writes it to `meta.json` when the gateway provides it. `meta.json` is not published — only the aggregated `qa_data.json` is. "Is the extra pipeline stage worth it?" can only be answered on latency here, not token spend.
 - **The GPT-Researcher comparison (arm G) is n=3.** Labeled preliminary everywhere it's mentioned — not enough samples to support "external systems necessarily fail on weak base models" as a strong claim.
 - **Judge scores have real run-to-run variance** (~1.0 on the same prompt, measured empirically). Any two-arm comparison should be read alongside its `n`, not as a bare point estimate.
 - **The topic mix changes the headline numbers a lot.** At n=10, F115 led B by +0.66 judge; at n=15, +0.12; at n=24 (after adding both softer topics and, in a follow-up round, deliberately "hard" data-rich ones to rule out a soft-topic artifact), **−0.08**. The mechanism behind this (honest disclosure of retrieval gaps gets penalized more than confident glossing-over) is consistent and explainable, not noise — but it means none of these numbers should be treated as a fixed, topic-independent property of the arm. Expect them to keep moving as the test set grows.
@@ -179,7 +191,9 @@ Disclosed here instead of glossed over, since the project's own thesis is that h
 
 ## 🏗️ Project Structure
 
-`arms/` has 31 files in total — the 14 covered in the comparison above, plus
+`arms/` has 31 files in total (as of 2026-09-08) — the 14 arms with committed
+per-question results in `qa_data.json` (all 14 tabled or listed in the Arm
+Comparison above, and all 14 in `dashboard.html`), plus
 17 earlier-round experiments (workflow/scaffold designs, model-choice arms)
 that are superseded but kept for the historical record; see `EXPERIMENTS.md`
 for their story.
@@ -187,9 +201,9 @@ for their story.
 | Directory | Contents | Description |
 |:---|:---|:---|
 | `arms/` | 31 arm implementations | B/F/G series pipeline designs |
-| `eval/` | judge.py, run.py, questions.json | Evaluation system (Claude Opus blind judging) |
+| `eval/` | judge.py, run.py, contamination.py, questions.json, questions_ext.json | Evaluation system (Claude Opus blind judging) |
 | `common/` | Shared utility functions | Common dependencies across arms |
-| `scripts/` | dash_agg.py, dash_qa_build.py, sanitize.py | Data processing & dashboard generation |
+| `scripts/` | dash_agg.py, dash_qa_build.py, embed_qa_data.py, sanitize_for_publish.py | Data processing & dashboard generation |
 
 ```
 deepresearch-arms-lab/
@@ -265,6 +279,8 @@ python3 scripts/dash_qa_build.py
 python3 scripts/embed_qa_data.py   # inline qa_data.json into dashboard.html
 ```
 
+`scripts/embed_qa_data.py` needs the `fetch('qa_data.json')` anchor that exists only in the pre-embed `dashboard.html`. The committed dashboard is already inlined, so re-running the script unchanged exits with "锚点未找到" — restore `dashboard.html` from git before re-embedding (the script is not idempotent).
+
 <br/>
 
 ## When to use it
@@ -278,7 +294,7 @@ python3 scripts/embed_qa_data.py   # inline qa_data.json into dashboard.html
 
 - **You want a recommendation to copy.** There isn't one. At n=24 all three structural arms score *below* the bare baseline on judged quality; which to pick depends on whether your use case weights "reads complete" or "everything said is grounded". The earlier single-winner framing was withdrawn — see Key Findings.
 - **You want numbers that generalise to a strong model.** Everything here is measured on one weak base model (MiMo 2.5 Pro), and several findings are specifically about weak-model failure modes.
-- **You want cost or token comparisons.** Not instrumented: `tokens.in/out` are 0 for this whole round, so wall-clock latency is the only cost proxy.
+- **You want cost or token comparisons.** No figures available: the gateway returned no usage block, so `tokens.in/out` are 0 for this whole round and wall-clock latency is the only cost proxy.
 - **You want statistical significance.** Judge scores vary run-to-run by roughly 1.0 on the same prompt. The n=10 Hybrid-v6 comparison gave a paired bootstrap 95% CI of [−0.06, +0.21] around +0.09 — crossing zero, with n≈60 estimated to detect an effect that size. Read every number next to its `n`; several arms are n=3 and labelled exploratory.
 - **You expect the headline numbers to hold still.** They have not: the same F115-vs-baseline comparison moved 0.74 points as the question set grew from 10 to 24. Expect further movement.
 - **You need faithfulness measured on academic citations.** fact-v2 verifies by fetching the cited page, so `Author, "Title," Venue, Year` citations without URLs score zero checkable pairs — on one question two arms were simply unmeasured. Disclosed as a known blind spot in the ruler, not patched around.
@@ -300,7 +316,7 @@ The search and read tools are wrapped so every fetched page gets a stable numeri
 No. Judge scores drift roughly 1.0 run-to-run on the same prompt, and switching to a date-injected judge prompt shifted arm scores by 0.3–0.6. Only same-batch, same-judge comparisons are meaningful, which is why every table carries its `n` and the log repeatedly warns against cross-table comparison of absolutes.
 
 **Where do the questions come from, and is contamination handled?**
-Ten are this project's own Chinese research topics in `eval/questions.json`. The n=24 comparison uses 14 questions borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0), attributed in `THIRD_PARTY_NOTICES.md`. Contamination is audited on three levels by `eval/contamination.py`, and `run.py --no-search` gives a closed-book baseline so that open-book minus closed-book isolates real retrieval gain from the model's parametric knowledge.
+Ten are this project's own Chinese research topics in `eval/questions.json`. The n=24 comparison uses 14 questions borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0), attributed in `THIRD_PARTY_NOTICES.md`. Contamination is audited by `eval/contamination.py` on two offline levels (BML/QCL); the third level it documents (EAL, high-overlap "one-stop answer" pages) needs page fetches plus an LLM and is out of scope there. `run.py --no-search` gives a closed-book baseline so that open-book minus closed-book isolates real retrieval gain from the model's parametric knowledge.
 
 <br/>
 

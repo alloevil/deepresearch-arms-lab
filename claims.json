@@ -3,7 +3,7 @@
   "url": "https://alloevil.github.io/deepresearch-arms-lab/",
   "repository": "https://github.com/alloevil/deepresearch-arms-lab",
   "updated": "2026-09-08",
-  "notes": "All values below are copied from the uniform n=24 aggregation recorded in EXPERIMENTS.md (2026-07-29) unless the claim states another n. Judge = Claude Opus 4.8 blind evaluation, RACE-style four-dimension rubric, median of 3 samples, 0-10. Faithfulness = fact-v2 clause-level support rate, 0-1. Every arm ran on the same base model (MiMo 2.5 Pro), the same search backend and the same questions. Judge scores drift run to run, so only same-batch deltas are comparable; absolute scores must not be compared across batches.",
+  "notes": "All values below are copied from the uniform n=24 aggregation recorded in EXPERIMENTS.md (2026-07-29) unless the claim states another n. Judge = Claude Opus 4.8 blind evaluation, RACE-style four-dimension rubric, median of 3 samples, 0-10; the judge model is the harness default (eval/judge.py), and per-run judge metadata (model, rubric hash, date, sample count) stays in the unpublished results/ tree. Faithfulness = fact-v2 clause-level support rate, 0-1. Every arm ran on the same base model (MiMo 2.5 Pro) and the same search backend; arms ran subsets of one shared question bank (n=24 / n=10 / n=3, shown with each claim). Judge scores drift run to run, so only same-batch deltas are comparable; absolute scores must not be compared across batches.",
   "claims": [
     {
       "id": "f115-quality-cost-n24",
@@ -27,7 +27,7 @@
     },
     {
       "id": "f11-precitation-n24",
-      "claim": "Source-side pre-citation (F11) buys the largest faithfulness gain of any arm and pays the largest quality cost.",
+      "claim": "Source-side pre-citation (F11) buys the largest faithfulness gain among the n=24 arms and pays the largest quality cost (the n=3 arms ran a different subset of questions and are not comparable across batches).",
       "value": "judge 7.59 (delta -0.26), faithfulness 0.68 (delta +0.26)",
       "metric": "judge score 0-10 and fact-v2 clause-level support rate 0-1, both against the bare baseline B at n=24",
       "method": "The search tool injects a stable numeric id per fetched page; the writing prompt may cite only an assigned number, never a URL, and code converts numbers into footnotes, so the model structurally cannot fabricate a URL.",
@@ -60,7 +60,7 @@
       "claim": "Making the model maintain a key-claims registry while writing (F9.1) produced no clause-level faithfulness gain over simply prompting a citation protocol (B3).",
       "value": "0.48 vs 0.48",
       "metric": "fact-v2 clause-level support rate, 0-1, both arms at n=10",
-      "method": "F9.1 requires the model to append each claim and its verbatim source excerpt to a ledger file before using the claim. On this weak base model the ledger is not reliably maintained; judge scores were 8.13 (F9.1) against 8.04 (B3) and latency roughly doubled.",
+      "method": "F9.1 requires the model to append each claim and its verbatim source excerpt to a ledger file before using the claim. On this weak base model the ledger is not reliably maintained; judge scores were 8.13 (F9.1) against 8.04 (B3), and per-question latency ran about 3x the bare baseline's wall-clock over the same 10 questions (mean 1217 s vs 404 s; 1.3x B3's).",
       "repro": "python3 -m eval.run --arms B3,F91 --tag my_run && python3 -m eval.run --fact results/my_run --v2 --arms B3,F91",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/f91-vs-b3-report.md",
       "verified": "2026-07-09"
@@ -68,7 +68,7 @@
     {
       "id": "single-pass-boundary-atomic-claims",
       "claim": "Forcing one atomic factual claim per sentence on top of pre-citation reduced faithfulness rather than improving it.",
-      "value": "0.55 vs 0.68 (delta -0.18 against F11)",
+      "value": "0.55 vs F11's 0.78 on the same 3 questions (delta -0.23)",
       "metric": "fact-v2 clause-level support rate, 0-1, at n=3",
       "method": "F11.3 adds a structural constraint to F11 forbidding compound sentences that bundle several claims under one citation; the result is more, weaker-grounded micro-claims. Two sibling perturbations (wider retrieval budget, allowing uncited background knowledge) also failed to improve faithfulness. n=3, exploratory.",
       "repro": "python3 -m eval.run --arms F11,F113 --tag my_run && python3 -m eval.run --fact results/my_run --v2 --arms F11,F113",
@@ -89,7 +89,7 @@
       "id": "arm-implementations-committed",
       "claim": "Every arm in the study is a committed, runnable implementation rather than a described configuration.",
       "value": "31",
-      "metric": "Python files under arms/ — the 14 covered in the headline comparison plus 17 superseded earlier-round arms kept for the historical record",
+      "metric": "Python files under arms/ — the 14 arms with committed per-question results in qa_data.json (all 14 in dashboard.html) plus 17 superseded earlier-round arms kept for the historical record",
       "method": "Directory listing of arms/ in the repository.",
       "repro": "ls arms/*.py | wc -l",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/tree/master/arms",
