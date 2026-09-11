@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">deepresearch-arms-lab — 14-arm ablation study on deep research pipelines</title>
+  <desc id="desc">A 14-cell grid, one cell per arm of the study, with the honest verdict distribution: four arms buy citation faithfulness at a judge-quality cost, six gain nothing or degrade, one is the baseline, and three are not separately tabled.</desc>
+
+  <rect width="1200" height="420" rx="24" fill="#0D1117"/>
+
+  <g id="header" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', Arial, sans-serif">
+    <text x="56" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" letter-spacing="1.6" fill="#8B949E">14-ARM ABLATION · ALL VERDICTS SHOWN · MiMo 2.5 PRO · BLIND-JUDGED</text>
+    <text x="56" y="104" font-size="54" font-weight="700" fill="#E6EDF3">deepresearch-arms-lab</text>
+    <text x="56" y="144" font-size="22" fill="#E6EDF3" opacity="0.82">Which citation mechanisms actually survive a weak Chinese base model?</text>
+    <text x="56" y="176" font-size="18" fill="#8B949E">No arm wins on both axes — four buy faithfulness, six gain nothing, three stay exploratory.</text>
+  </g>
+
+  <g id="arm-grid" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', Arial, sans-serif">
+    <!-- row 1 -->
+    <g id="arm-b">
+      <rect x="56" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#8B949E" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="70" y="208" width="40" height="5" rx="2.5" fill="#8B949E" opacity="0.7"/>
+      <text x="130.29" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">B</text>
+      <text x="130.29" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#8B949E">baseline</text>
+      <text x="130.29" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=24</text>
+    </g>
+    <g id="arm-b3">
+      <rect x="212.57" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="226.57" y="208" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="286.86" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">B3</text>
+      <text x="286.86" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">no transfer</text>
+      <text x="286.86" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=10</text>
+    </g>
+    <g id="arm-f91">
+      <rect x="369.14" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="383.14" y="208" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="443.43" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F9.1</text>
+      <text x="443.43" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">no gain</text>
+      <text x="443.43" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=10</text>
+    </g>
+    <g id="arm-f10">
+      <rect x="525.71" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#58A6FF" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="539.71" y="208" width="40" height="5" rx="2.5" fill="#58A6FF"/>
+      <text x="599.99" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F10</text>
+      <text x="599.99" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#58A6FF">tradeoff</text>
+      <text x="599.99" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f101">
+      <rect x="682.29" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#8B949E" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <rect x="696.29" y="208" width="40" height="5" rx="2.5" fill="#8B949E" opacity="0.55"/>
+      <text x="756.57" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3" opacity="0.85">F10.1</text>
+      <text x="756.57" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#8B949E">exploratory</text>
+      <text x="756.57" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f102">
+      <rect x="838.86" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#58A6FF" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="852.86" y="208" width="40" height="5" rx="2.5" fill="#58A6FF"/>
+      <text x="913.14" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F10.2</text>
+      <text x="913.14" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#58A6FF">tradeoff</text>
+      <text x="913.14" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=24</text>
+    </g>
+    <g id="arm-f103">
+      <rect x="995.43" y="196" width="148.57" height="92" rx="12" fill="#161B22" stroke="#8B949E" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <rect x="1009.43" y="208" width="40" height="5" rx="2.5" fill="#8B949E" opacity="0.55"/>
+      <text x="1069.71" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3" opacity="0.85">F10.3</text>
+      <text x="1069.71" y="263" text-anchor="middle" font-size="18" font-weight="700" fill="#8B949E">exploratory</text>
+      <text x="1069.71" y="282" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+
+    <!-- row 2 -->
+    <g id="arm-f11">
+      <rect x="56" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#58A6FF" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="70" y="308" width="40" height="5" rx="2.5" fill="#58A6FF"/>
+      <text x="130.29" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F11</text>
+      <text x="130.29" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#58A6FF">tradeoff</text>
+      <text x="130.29" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=24</text>
+    </g>
+    <g id="arm-f111">
+      <rect x="212.57" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="226.57" y="308" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="286.86" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F11.1</text>
+      <text x="286.86" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">degraded</text>
+      <text x="286.86" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f112">
+      <rect x="369.14" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="383.14" y="308" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="443.43" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F11.2</text>
+      <text x="443.43" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">degraded</text>
+      <text x="443.43" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f113">
+      <rect x="525.71" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="539.71" y="308" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="599.99" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F11.3</text>
+      <text x="599.99" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">degraded</text>
+      <text x="599.99" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f114">
+      <rect x="682.29" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#8B949E" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
+      <rect x="696.29" y="308" width="40" height="5" rx="2.5" fill="#8B949E" opacity="0.55"/>
+      <text x="756.57" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3" opacity="0.85">F11.4</text>
+      <text x="756.57" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#8B949E">precursor</text>
+      <text x="756.57" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+    <g id="arm-f115">
+      <rect x="838.86" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#58A6FF" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="852.86" y="308" width="40" height="5" rx="2.5" fill="#58A6FF"/>
+      <text x="913.14" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">F115</text>
+      <text x="913.14" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#58A6FF">tradeoff</text>
+      <text x="913.14" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=24</text>
+    </g>
+    <g id="arm-g">
+      <rect x="995.43" y="296" width="148.57" height="92" rx="12" fill="#161B22" stroke="#F85149" stroke-opacity="0.5" stroke-width="1.5"/>
+      <rect x="1009.43" y="308" width="40" height="5" rx="2.5" fill="#F85149"/>
+      <text x="1069.71" y="342" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="700" fill="#E6EDF3">G</text>
+      <text x="1069.71" y="363" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">preliminary</text>
+      <text x="1069.71" y="382" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E" opacity="0.85">n=3</text>
+    </g>
+  </g>
+
+  <g id="legend" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', Arial, sans-serif" font-size="18" fill="#8B949E">
+    <rect x="56" y="397" width="13" height="13" rx="3" fill="#58A6FF"/>
+    <text x="78" y="409">faithfulness bought, judge quality paid</text>
+    <rect x="455.9" y="397" width="13" height="13" rx="3" fill="#F85149"/>
+    <text x="477.9" y="409">no gain / degraded</text>
+    <rect x="678.7" y="397" width="13" height="13" rx="3" fill="#8B949E"/>
+    <text x="700.7" y="409">baseline / n=3 not tabled</text>
+  </g>
+</svg>

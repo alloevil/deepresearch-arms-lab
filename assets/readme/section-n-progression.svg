@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="160" viewBox="0 0 1200 160" role="img" aria-labelledby="title desc">
+  <title id="title">F115 versus baseline B: judge delta as the question set grew</title>
+  <desc id="desc">Bar chart of the F115-minus-B judge delta on three question sets: plus 0.66 at n=10, plus 0.12 at the n=15 re-validation round, and minus 0.08 at n=24. The same arm and the same judge produced all three numbers, so the headline did not hold still as the test set grew.</desc>
+
+  <rect width="1200" height="160" rx="20" fill="#0D1117"/>
+
+  <g id="caption" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', Arial, sans-serif">
+    <text x="56" y="58" font-size="24" font-weight="700" fill="#E6EDF3">The headline number did not hold still</text>
+    <text x="56" y="88" font-size="18" fill="#8B949E">F115 vs baseline B — judge delta, same arm, same blind judge.</text>
+    <text x="56" y="116" font-size="18" fill="#8B949E">Only the question set grew. Kept in the log, not edited out.</text>
+    <text x="56" y="142" font-size="18" fill="#8B949E">Read every number next to its n.</text>
+  </g>
+
+  <g id="chart" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', Arial, sans-serif">
+    <line x1="628" y1="92" x2="1144" y2="92" stroke="#8B949E" stroke-opacity="0.35" stroke-width="1"/>
+    <text x="622" y="98" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E">0</text>
+
+    <rect x="642" y="40" width="76" height="52" rx="3" fill="#58A6FF"/>
+    <text x="680" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#58A6FF">+0.66</text>
+
+    <rect x="812" y="82.55" width="76" height="9.45" rx="3" fill="#58A6FF"/>
+    <text x="850" y="74" text-anchor="middle" font-size="18" font-weight="700" fill="#58A6FF">+0.12</text>
+    <text x="850" y="56" text-anchor="middle" font-size="18" fill="#8B949E">re-validation round</text>
+
+    <rect x="982" y="92" width="76" height="6.3" rx="3" fill="#F85149"/>
+    <text x="1020" y="120" text-anchor="middle" font-size="18" font-weight="700" fill="#F85149">−0.08</text>
+
+    <text x="680" y="140" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E">n=10</text>
+    <text x="850" y="140" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E">n=15</text>
+    <text x="1020" y="140" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" fill="#8B949E">n=24</text>
+  </g>
+</svg>

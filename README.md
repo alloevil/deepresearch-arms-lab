@@ -1,16 +1,16 @@
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="deepresearch-arms-lab — a 14-arm ablation study of deep research pipelines, negative results included">
+</p>
+
 # deepresearch-arms-lab
 
 **deepresearch-arms-lab** is a 14-arm ablation study on deep-research pipeline design that measures which prompt and pipeline mechanisms actually reduce citation fabrication on a weak base model, for engineers building autonomous research agents.
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:1F6FEB,100:8B5CF6&height=220&section=header&text=deepresearch-arms-lab&fontSize=60&fontColor=FFFFFF&fontAlignY=35&desc=14-arm%20ablation%20study%20on%20deep%20research%20pipelines&descSize=18&descAlignY=55&animation=fadeIn" width="100%" alt="deepresearch-arms-lab — 14-arm ablation study on deep research pipelines"/>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Focus-Deep%20Research%20Pipeline%20Design-FF6B6B?style=for-the-badge&labelColor=0D1117&logo=target&logoColor=white" />
-  <img src="https://img.shields.io/badge/Method-14_arm%20Ablation-8B5CF6?style=for-the-badge&labelColor=0D1117&logo=flask&logoColor=white" />
-  <img src="https://img.shields.io/badge/Eval-Claude%20Opus%204.8%20Blind%20Judging-58A6FF?style=for-the-badge&labelColor=0D1117&logo=openai&logoColor=white" />
-  <a href="https://github.com/alloevil/deepresearch-arms-lab/releases/latest"><img src="https://img.shields.io/github/v/release/alloevil/deepresearch-arms-lab?style=for-the-badge&labelColor=0D1117&logo=github&color=3FB950" /></a>
+  <img alt="Focus" src="https://img.shields.io/badge/Focus-Deep%20Research%20Pipeline%20Design-FF6B6B?style=for-the-badge&labelColor=0D1117&logo=target&logoColor=white" />
+  <img alt="Method" src="https://img.shields.io/badge/Method-14_arm%20Ablation-8B5CF6?style=for-the-badge&labelColor=0D1117&logo=flask&logoColor=white" />
+  <img alt="Eval" src="https://img.shields.io/badge/Eval-Claude%20Opus%204.8%20Blind%20Judging-58A6FF?style=for-the-badge&labelColor=0D1117&logo=openai&logoColor=white" />
+  <a href="https://github.com/alloevil/deepresearch-arms-lab/releases/latest"><img alt="latest release" src="https://img.shields.io/github/v/release/alloevil/deepresearch-arms-lab?style=for-the-badge&labelColor=0D1117&logo=github&color=3FB950" /></a>
 </p>
 
 <br/>
@@ -309,8 +309,3 @@ Ten are this project's own Chinese research topics in `eval/questions.json`. The
 - 14 of the 24 topics in `eval/questions_ext.json` (`e11`–`e19`, `e21`–`e25`) are used in the main n=24 comparison, borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0) — see `THIRD_PARTY_NOTICES.md` for full attribution
 - Evaluation design inspired by Anthropic's CitationAgent and Perplexity's search-layer pre-binding citation approach
 
-<br/>
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:1F6FEB,100:8B5CF6&height=100&section=footer" width="100%" />
-</p>
