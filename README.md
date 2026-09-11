@@ -309,3 +309,8 @@ Ten are this project's own Chinese research topics in `eval/questions.json`. The
 - 14 of the 24 topics in `eval/questions_ext.json` (`e11`–`e19`, `e21`–`e25`) are used in the main n=24 comparison, borrowed verbatim from [DeepResearch Bench](https://github.com/Ayanami0730/deep_research_bench) (Apache-2.0) — see `THIRD_PARTY_NOTICES.md` for full attribution
 - Evaluation design inspired by Anthropic's CitationAgent and Perplexity's search-layer pre-binding citation approach
 
+---
+
+<p align="center">
+  <a href="https://github.com/oil-oil/beautify-github-readme"><img src="./assets/readme/made-with-beautify.svg" width="300" alt="README made with beautify-github-readme"></a>
+</p>
