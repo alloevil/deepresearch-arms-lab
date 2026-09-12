@@ -2,7 +2,7 @@
   "project": "deepresearch-arms-lab",
   "url": "https://alloevil.github.io/deepresearch-arms-lab/",
   "repository": "https://github.com/alloevil/deepresearch-arms-lab",
-  "updated": "2026-09-08",
+  "updated": "2026-09-13",
   "notes": "All values below are copied from the uniform n=24 aggregation recorded in EXPERIMENTS.md (2026-07-29) unless the claim states another n. Judge = Claude Opus 4.8 blind evaluation, RACE-style four-dimension rubric, median of 3 samples, 0-10; the judge model is the harness default (eval/judge.py), and per-run judge metadata (model, rubric hash, date, sample count) stays in the unpublished results/ tree. Faithfulness = fact-v2 clause-level support rate, 0-1. Every arm ran on the same base model (MiMo 2.5 Pro) and the same search backend; arms ran subsets of one shared question bank (n=24 / n=10 / n=3, shown with each claim). Judge scores drift run to run, so only same-batch deltas are comparable; absolute scores must not be compared across batches.",
   "claims": [
     {
@@ -13,7 +13,15 @@
       "method": "24 Chinese deep-research questions run on the same weak base model (MiMo 2.5 Pro) and the same search backend for both arms; reports anonymised and shuffled before judging.",
       "repro": "python3 -m eval.run --arms B,F115 --tag my_run && python3 -m eval.run --judge results/my_run --samples 3",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/EXPERIMENTS.md",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f vs %.2f (%+.2f)'%(J('F115'),J('B'),J('F115')-J('B')))\"",
+        "expect": {
+          "equals": "7.77 vs 7.85 (-0.08)"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json; the `repro` above re-runs the whole harness with a model; arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "f115-faithfulness-gain-n24",
@@ -23,7 +31,15 @@
       "method": "Same 24 questions and same runs as the judged-quality claim; fact-v2 re-fetches each cited page and checks the clause against its content.",
       "repro": "python3 -m eval.run --fact results/my_run --v2 --arms B,F115",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/EXPERIMENTS.md",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f vs %.2f (%+.2f)'%(SUB('F115'),SUB('B'),SUB('F115')-SUB('B')))\"",
+        "expect": {
+          "equals": "0.66 vs 0.42 (+0.24)"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json; arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "f11-precitation-n24",
@@ -33,7 +49,15 @@
       "method": "The search tool injects a stable numeric id per fetched page; the writing prompt may cite only an assigned number, never a URL, and code converts numbers into footnotes, so the model structurally cannot fabricate a URL.",
       "repro": "python3 -m eval.run --arms B,F11 --tag my_run && python3 -m eval.run --judge results/my_run --samples 3 && python3 -m eval.run --fact results/my_run --v2 --arms B,F11",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/arms/arm_f11_precite.py",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f (%+.2f) / %.2f (%+.2f)'%(J('F11'),J('F11')-J('B'),SUB('F11'),SUB('F11')-SUB('B')))\"",
+        "expect": {
+          "equals": "7.59 (-0.26) / 0.68 (+0.26)"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json; arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "f102-postverify-n24",
@@ -43,7 +67,15 @@
       "method": "A second pass audits every citation the baseline already wrote against the real fetched page content, deciding keep / weaken / replace / flag as unverified; the drafting pass is untouched.",
       "repro": "python3 -m eval.run --arms B,F102 --tag my_run && python3 -m eval.run --judge results/my_run --samples 3 && python3 -m eval.run --fact results/my_run --v2 --arms B,F102",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/arms/arm_f102_postverify.py",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f (%+.2f) / %.2f (%+.2f)'%(J('F102'),J('F102')-J('B'),SUB('F102'),SUB('F102')-SUB('B')))\"",
+        "expect": {
+          "equals": "7.59 (-0.26) / 0.54 (+0.12)"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json; arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "headline-collapses-as-test-set-grows",
@@ -53,7 +85,10 @@
       "method": "Same arms re-run as the question set was expanded from 10 to 15 (adding e11-e15), to 20 (adding e16-e20), then to 24 after one question was removed and 5 deliberately data-rich 'hard' questions were added to rule out a soft-topic artefact. The mechanism is stable and explainable: honest disclosure of retrieval gaps is penalised by the judge more than confident glossing-over.",
       "repro": "python3 -m eval.run --arms B,F115 --questions <subset> --tag my_run && python3 -m eval.run --judge results/my_run --samples 3",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/EXPERIMENTS.md",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "manual": "the +0.66 / +0.12 / −0.08 progression comes from three separate batches recorded in EXPERIMENTS.md (n=10, n=15, n=24); the committed qa_data.json only carries the n=24 batch, so the earlier two cannot be recomputed here"
+      }
     },
     {
       "id": "negative-result-claims-registry",
@@ -63,7 +98,15 @@
       "method": "F9.1 requires the model to append each claim and its verbatim source excerpt to a ledger file before using the claim. On this weak base model the ledger is not reliably maintained; judge scores were 8.13 (F9.1) against 8.04 (B3), and per-question latency ran about 3x the bare baseline's wall-clock over the same 10 questions (mean 1217 s vs 404 s; 1.3x B3's).",
       "repro": "python3 -m eval.run --arms B3,F91 --tag my_run && python3 -m eval.run --fact results/my_run --v2 --arms B3,F91",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/f91-vs-b3-report.md",
-      "verified": "2026-07-09"
+      "verified": "2026-07-09",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f vs %.2f'%(SUB('B3'),SUB('F91')))\"",
+        "expect": {
+          "equals": "0.48 vs 0.48"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json (n=10 batch); arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "single-pass-boundary-atomic-claims",
@@ -73,7 +116,15 @@
       "method": "F11.3 adds a structural constraint to F11 forbidding compound sentences that bundle several claims under one citation; the result is more, weaker-grounded micro-claims. Two sibling perturbations (wider retrieval budget, allowing uncited background knowledge) also failed to improve faithfulness. n=3, exploratory.",
       "repro": "python3 -m eval.run --arms F11,F113 --tag my_run && python3 -m eval.run --fact results/my_run --v2 --arms F11,F113",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/arms/arm_f113_atomic.py",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f vs %.2f (%+.2f)'%(SUB3('F113'),SUB3('F11'),SUB3('F113')-SUB3('F11')))\"",
+        "expect": {
+          "equals": "0.55 vs 0.78 (-0.23)"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json, restricted to the three questions both arms ran; arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "external-framework-does-not-transfer",
@@ -83,7 +134,15 @@
       "method": "Arm G swaps the whole pipeline for GPT-Researcher against the same base model and, as far as practical, the same search backend. Only 3 questions were run because of search-quota and embedding-language limits, so this is labelled preliminary everywhere it appears and does not support a strong claim about external frameworks in general.",
       "repro": "python3 -m eval.run --arms G --tag my_run && python3 -m eval.run --judge results/my_run --samples 3",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/blob/master/arms/arm_g_gptr.py",
-      "verified": "2026-07-29"
+      "verified": "2026-07-29",
+      "check": {
+        "cmd": "python3 -c \"import json,statistics as S;D=json.load(open('qa_data.json'));G=lambda a:[r['judge']['overall'] for r in D[a]];J=lambda a:round(S.mean(G(a)),2);F=lambda a:[r for r in D[a] if r['fact'].get('subclaims')];SUB=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F(a)),sum(r['fact']['subclaims']['total'] for r in F(a))),2);T=('q01','q05','q09');F3=lambda a:[r for r in F(a) if r['qid'] in T];SUB3=lambda a:round((lambda s,t:s/t if t else float('nan'))(sum(r['fact']['subclaims']['supported'] for r in F3(a)),sum(r['fact']['subclaims']['total'] for r in F3(a))),2);print('%.2f %.2f'%(J('G'),SUB('G')))\"",
+        "expect": {
+          "equals": "5.75 0.45"
+        },
+        "timeout": 60,
+        "note": "recomputed from the committed qa_data.json (n=3); arm means are rounded to two decimals first, then subtracted — the arithmetic the report shows"
+      }
     },
     {
       "id": "arm-implementations-committed",
@@ -93,7 +152,14 @@
       "method": "Directory listing of arms/ in the repository.",
       "repro": "ls arms/*.py | wc -l",
       "evidence": "https://github.com/alloevil/deepresearch-arms-lab/tree/master/arms",
-      "verified": "2026-09-08"
+      "verified": "2026-09-08",
+      "check": {
+        "cmd": "ls arms/*.py | wc -l",
+        "expect": {
+          "equals": "31"
+        },
+        "timeout": 60
+      }
     }
   ]
 }
